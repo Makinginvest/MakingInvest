@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:
+  makinginvest-portainer:
+    image: 'portainer/portainer-ce:latest'
+    container_name: portainer
+    restart: unless-stopped
+    networks:
+      - traefik-network
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.makinginvest-portainer.rule=Host(`makinginvest-portainer.makinginvest.com`)'
+      # - 'traefik.http.routers.makinginvest-portainer.rule=Host(`makinginvest.codememory.xyz`)'
+      - 'traefik.http.routers.makinginvest-portainer.entrypoints=websecure'
+      - 'traefik.http.routers.makinginvest-portainer.tls.certresolver=myresolver'
+      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+      - 'traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)'
+      - 'traefik.http.routers.redirs.entrypoints=web'
+      - 'traefik.http.routers.redirs.middlewares=redirect-to-https'
+      - 'traefik.http.services.portainer.loadbalancer.server.port=9000'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - '/root/vol-portainer:/data'
+
+networks:
+  traefik-network:
+    external: true

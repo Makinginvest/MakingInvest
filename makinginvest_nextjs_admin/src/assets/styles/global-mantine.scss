@@ -1,0 +1,45 @@
+/* ------------------------------ NOTE OVERRIDE ----------------------------- */
+.mantine-InputWrapper-root {
+  margin-bottom: 20px;
+}
+.mantine-UnstyledButton-root {
+}
+
+.mantine-Input-input,
+.mantine-UnstyledButton-root,
+.ql-editor {
+}
+
+.mantine-TextInput-label,
+.mantine-Textarea-label,
+.mantine-NativeSelect-label,
+.mantine-DatePicker-label,
+.mantine-InputWrapper-label,
+.mantine-TimeInput-label {
+  margin-bottom: 4px;
+}
+
+.mantine-Input-input,
+.mantine-TextInput-input,
+.mantine-Textarea-input,
+.mantine-TimeField-timeInput {
+  min-height: 38px;
+  border-radius: 4px;
+}
+
+.mantine-AmPmInput-timeInput,
+.mantine-AmPmInput-amPmInput {
+  width: 200px;
+}
+
+/* -------------------------- NOTE SINGLE OVERRIDE -------------------------- */
+.native-select-table {
+  .mantine-Input-wrapper {
+    margin-bottom: 0;
+  }
+
+  .mantine-Select-input {
+    border: none;
+    margin-bottom: 0px;
+  }
+}

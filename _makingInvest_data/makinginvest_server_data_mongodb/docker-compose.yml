@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  makinginvest-mongodb:
+    image: mongo:6.0.4
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '5'
+    container_name: makinginvest-mongodb
+    restart: unless-stopped
+    command:
+      - /usr/bin/mongod
+      - --port=27027
+      - --slowms=400
+      - --bind_ip_all
+      - --auth
+
+    volumes:
+      - /root/vol-mongodb-makinginvest-data/db:/data/db
+      - /root/vol-mongodb-makinginvest-data/etc:/etc/
+    ports:
+      - 27027:27027
+    networks:
+      - traefik-network
+
+networks:
+  traefik-network:
+    external: true

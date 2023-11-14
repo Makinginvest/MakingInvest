@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "makinginvestsignally",
+  "private_key_id": "998561251e5ca2261d0961ff3c4ca4462a4ef864",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDpEzVQNJqfKaa2\ngyjVoSmc0pw9EhkXFcrTpBB/8IDS+bPm0mTVlZQ6KwCZngozyjWPGdjB41q2qnB/\nYtiPvmOUAyy686KeAPuHhIWy6Jz0w/D0+LgWdKjFYzvc0Af68qL4LYFnDcZBUzD2\nhpDXURSEV3Gj6gHTLQpGTfeiGazWGlXVOKysQYOKvab5sqhI/XGo5hpTGUxPanlr\nrK7V11ZH/tYlY4PvOSQbMq6zSqHx/Zb1QyWOYZjwUJ0/jn/sMd0z4nGl/9P3uofo\nnF55TqA3Yd8xhAPHpQm+bhFXNpFZ3LPfZtIsB+ScNmCoj3KwTUPgQjOcIIAhy8xn\nb/kQgSSJAgMBAAECggEAB7MAcCZUtAytrg2Pt0LfVSFcU0rtdKaqvRDVEYAR2Vl+\nfythdL0mTA4CM12vnsqMUcfvGGe/JhXKQo/McWJYkSae5YwWMDVks0zS5J6StL+W\nQZlhVC74j915a3Y2lUXkauG7iq2ltQaFywoviOIfFRVIZghDlPf1BQge6OydM4Ag\neA5YBd8NtSnmWA8rXLa7RGhMS1lXaIQsAtQu2pItg2V3e5fO3RvJVctgqWawxvgK\n9k64LIbPVp4n3+y6OCki6VjWHw2dAWghSl6Vt5qc2vI0WINwnyUFB7MGw0rtymfZ\nBiE64d1jG18IAK+anf6gHlffy43KnEuxsA7gFLMKIwKBgQD14cb37cS2jviY2xAx\nyYRUTU2U5QDdLmivn95qKktX9NmJ4G/B+5TiPUXSrvFGPXtR+D3nByKlhsSqclQg\nPKHkSg4+/9FdsFt1cvsfY8eZibONAPjBK2ZpNoxblUlmP5yaxhxiOkLgLbHvIX/U\nhvAkR7SUejV/dFzvWpRdaPZJnwKBgQDyqoSIsa8MOMAikepMIYAX/BDFCwt3k7ZL\nR7J+SX1wTyzDEX2hd2bnZVgL8kMtUgEHtIL4WmhFiKi1MhJUOo8ZvduXnMnP8hLA\n8xuvL8mL84xHG4JK7NbRctynQf4RfEZ65Phw7S9jA2DLShEVcNdMTFd+cd5apM/j\nyMkY5XSw1wKBgGuir2f/FNrZ0WeQlhFFZwFEac7hRLSOSVOAR2vwIdVaIRSjRCkF\nydIUAonM/V/DMEXcxrRowjj1uwfmTn9iK3h1FrFraSp7Nj4+3EGMe2byCcCTCVH+\nfrFWKLE6s8vn0tVKHki9umLKfhbxcjUF8P/gx+MrcFngBYLeAw61EQN/AoGBAIKl\ns300zJ2z4B28mXwrfR9sokqzy5Sxfi/BhiPfxR02Q08yl4TbGBf0xBaKdAhuYgeX\n8/tqEUF+dfY34w5eCLU/Nn7F9xFxrw8a1AjZnZUvppKSCO/12yIgyRNzwCoB0qBP\nrkJ+MEkKhI5ubgwxGHkHkQOOorwCh7qHW12AC/c5AoGAY07LhhIphEO3YOxjb5Gj\nHrUB5YnnhNCI2uPQ41xME4AwKmlOUDEZlN0tiEoXcvTKqIus1Z4CU81vAzGMXvS0\n55j/iXSA5pa1q5UdaucEJzoFLVxDbzjuDJE/vrPmnBj/6cwDuXgBR/uFYjoLkdnl\nuM+1EwYpKk4mkDj7yLm6gB0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-uhfk9@makinginvestsignally.iam.gserviceaccount.com",
+  "client_id": "102938327197813178664",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-uhfk9%40makinginvestsignally.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
