@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
 
 
@@ -140,6 +140,11 @@ async def get_signals_forex_all_live1(useOldSignal=True):
         df_res = df_res[get_columns_signals]
         df_res = df_res.sort_values(by=["entryDateTimeUtc"], ascending=False)
 
+        df_res["hasFutures"] = False
+
+        # remove dead signals there are where lastCheckDateTimeUtc is less than 1 day ago
+        df_res = df_res[df_res["lastCheckDateTimeUtc"] >= datetime.utcnow() - timedelta(days=1)]
+
         # convert all NaN to None
         df_res = df_res.replace({np.nan: None})
 
@@ -179,12 +184,11 @@ async def get_signals_forex_all_live1(useOldSignal=True):
             )
 
         # print signals where entryResult == 'in progress' and entryType == 'long'
-        df_res["hasFutures"] = False
+
         df_pending_long = df_open[(df_open["entryResult"] == "in progress") & (df_open["entryType"] == "long")]
         df_pending_short = df_open[(df_open["entryResult"] == "in progress") & (df_open["entryType"] == "short")]
-        df_with_futures = df_res[df_res["hasFutures"] == True]
+
         dev_print("Open Signals: ", len(df_open))
-        dev_print("Signals Futures: ", len(df_with_futures))
         dev_print("Pending Long Signals: ", len(df_pending_long))
         dev_print("Pending Short Signals: ", len(df_pending_short))
 

@@ -60,13 +60,13 @@ async def get_signals_crypto_all_live1(useOldSignal=True):
         s_long = [x for x in s_long if x in f_symbols]
         # s_long = ["DOTUSDT", "INJUSDT", "ICPUSDT", "SPELLUSDT", "ZILUSDT", "MINAUSDT", "AXSUSDT", "REEFUSDT"]
         # s_long = ["IOSTUSDT"]
-        s_long = s_long[:150]
+        s_long = s_long[:200]
 
         s_short = await get_USDT_symbols_by_value("_datasets/data/_data_symbols_crypto_usdt_busd_futures.csv")
         s_short = [x for x in s_short if x in f_symbols]
         # s_short = ["DOTUSDT", "INJUSDT", "ICPUSDT", "SPELLUSDT", "ZILUSDT", "MINAUSDT", "AXSUSDT", "REEFUSDT"]
         # s_short = ["IOSTUSDT"]
-        s_short = s_short[:150]
+        s_short = s_short[:200]
 
         df = pd.DataFrame()
 
@@ -140,6 +140,9 @@ async def get_signals_crypto_all_live1(useOldSignal=True):
 
         symbols_with_futures = get_crypto_symbols_with_futures()
         df_res["hasFutures"] = df_res["symbol"].apply(lambda x: True if x in symbols_with_futures else False)
+
+        # remove dead signals there are where lastCheckDateTimeUtc is less than 1 day ago
+        df_res = df_res[df_res["lastCheckDateTimeUtc"] >= datetime.utcnow() - timedelta(days=1)]
 
         # convert all NaN to None
         df_res = df_res.replace({np.nan: None})

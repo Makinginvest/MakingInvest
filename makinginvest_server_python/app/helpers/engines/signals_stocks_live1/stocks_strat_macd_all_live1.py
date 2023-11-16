@@ -140,6 +140,9 @@ async def get_signals_stocks_all_live1(useOldSignal=True):
         df_res = df_res[get_columns_signals]
         df_res = df_res.sort_values(by=["entryDateTimeUtc"], ascending=False)
 
+        # remove dead signals there are where lastCheckDateTimeUtc is less than 1 day ago
+        df_res = df_res[df_res["lastCheckDateTimeUtc"] >= datetime.utcnow() - timedelta(days=1)]
+
         symbols_with_futures = get_crypto_symbols_with_futures()
         df_res["hasFutures"] = df_res["symbol"].apply(lambda x: True if x in symbols_with_futures else False)
         df_res["hasFutures"] = False
