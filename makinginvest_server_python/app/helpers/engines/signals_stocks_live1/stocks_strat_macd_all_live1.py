@@ -140,8 +140,11 @@ async def get_signals_stocks_all_live1(useOldSignal=True):
         df_res = df_res[get_columns_signals]
         df_res = df_res.sort_values(by=["entryDateTimeUtc"], ascending=False)
 
-        # remove dead signals there are where lastCheckDateTimeUtc is less than 1 day ago
-        df_res = df_res[df_res["lastCheckDateTimeUtc"] >= datetime.utcnow() - timedelta(days=1)]
+        # Close dead signals there are where lastCheckDateTimeUtc is less than 1 day ago set isClosed to True
+        df_res["isClosed"] = df_res["lastCheckDateTimeUtc"].apply(lambda x: True if x < datetime.utcnow() - timedelta(days=1) else False)
+        df_res["isClosedForced"] = df_res["lastCheckDateTimeUtc"].apply(lambda x: True if x < datetime.utcnow() - timedelta(days=1) else False)
+        df_res["entryAllowNewSignalDateTimeUtc"] = df_res["isClosedForced"].apply(lambda x: None if x == True else datetime.utcnow() - timedelta(days=1))
+        df_res = df_res.drop(columns=["isClosedForced"])
 
         symbols_with_futures = get_crypto_symbols_with_futures()
         df_res["hasFutures"] = df_res["symbol"].apply(lambda x: True if x in symbols_with_futures else False)
