@@ -58,7 +58,7 @@ app.mount("/socketio", sio_app)
 @app.on_event("startup")
 async def startup():
     await connect_to_mongodb()
-    asyncio.create_task(update_all_symbols_from_data_db_mongodb_aggr())
+    await update_all_symbols_from_data_db_mongodb_aggr()
     ensure_firebase_app()
 
 

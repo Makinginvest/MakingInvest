@@ -40,9 +40,9 @@ async def get_signals_stocks_all_live1(useOldSignal=True):
     datetime_end = None
     nameMarket = "stocks"
 
-    if useOldSignal == True:
-        # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
-        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
+    if useOldSignal == False:
+        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
+        # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
         signalsCollection = "signalsStocks"
         firestore_col_name = "signalsAggrOpen_V2"
 
@@ -141,10 +141,12 @@ async def get_signals_stocks_all_live1(useOldSignal=True):
         df_res = df_res.sort_values(by=["entryDateTimeUtc"], ascending=False)
 
         # Close dead signals there are where lastCheckDateTimeUtc is less than 1 day ago set isClosed to True
-        df_res["isClosed"] = df_res["lastCheckDateTimeUtc"].apply(lambda x: True if x < datetime.utcnow() - timedelta(days=1) else False)
-        df_res["isClosedForced"] = df_res["lastCheckDateTimeUtc"].apply(lambda x: True if x < datetime.utcnow() - timedelta(days=1) else False)
-        df_res["entryAllowNewSignalDateTimeUtc"] = df_res["isClosedForced"].apply(lambda x: None if x == True else datetime.utcnow() - timedelta(days=1))
-        df_res = df_res.drop(columns=["isClosedForced"])
+        df_res["isClosed"] = df_res.apply(
+            lambda x: True if x["lastCheckDateTimeUtc"] < current_time_floor - timedelta(days=1) and not x["isClosed"] else x["isClosed"], axis=1
+        )
+        df_res["entryAllowNewSignalDateTimeUtc"] = df_res.apply(
+            lambda x: current_time_floor if x["isClosed"] and x["entryAllowNewSignalDateTimeUtc"] is None else x["entryAllowNewSignalDateTimeUtc"], axis=1
+        )
 
         symbols_with_futures = get_crypto_symbols_with_futures()
         df_res["hasFutures"] = df_res["symbol"].apply(lambda x: True if x in symbols_with_futures else False)
