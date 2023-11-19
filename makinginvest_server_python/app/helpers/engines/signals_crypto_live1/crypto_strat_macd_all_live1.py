@@ -41,9 +41,9 @@ async def get_signals_crypto_all_live1(useOldSignal=True):
     datetime_end = None
     nameMarket = "crypto"
 
-    if useOldSignal == False:
-        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
-        # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
+    if useOldSignal == True:
+        # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
+        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
         signalsCollection = "signalsCrypto"
         firestore_col_name = "signalsAggrOpen_V2"
 
