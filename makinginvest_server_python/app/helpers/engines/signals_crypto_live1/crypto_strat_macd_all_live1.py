@@ -42,8 +42,8 @@ async def get_signals_crypto_all_live1(useOldSignal=True):
     nameMarket = "crypto"
 
     if useOldSignal == True:
-        # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
         datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
+        # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
         signalsCollection = "signalsCrypto"
         firestore_col_name = "signalsAggrOpen_V2"
 
@@ -143,7 +143,7 @@ async def get_signals_crypto_all_live1(useOldSignal=True):
 
         # Close dead signals there are where lastCheckDateTimeUtc is less than 1 day ago set isClosed to True
         df_res["isClosed"] = df_res.apply(
-            lambda x: True if x["lastCheckDateTimeUtc"] < current_time_floor - timedelta(days=1) and not x["isClosed"] else x["isClosed"], axis=1
+            lambda x: True if x["lastCheckDateTimeUtc"] < current_time_floor - timedelta(days=4) and not x["isClosed"] else x["isClosed"], axis=1
         )
         df_res["entryAllowNewSignalDateTimeUtc"] = df_res.apply(
             lambda x: current_time_floor if x["isClosed"] and x["entryAllowNewSignalDateTimeUtc"] is None else x["entryAllowNewSignalDateTimeUtc"], axis=1
