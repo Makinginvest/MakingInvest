@@ -41,8 +41,8 @@ async def get_signals_stocks_all_live1(useOldSignal=True):
     nameMarket = "stocks"
 
     if useOldSignal == True:
-        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
         # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
+        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
         signalsCollection = "signalsStocks"
         firestore_col_name = "signalsAggrOpen_V2"
 

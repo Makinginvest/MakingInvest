@@ -40,8 +40,8 @@ async def get_signals_forex_all_live1(useOldSignal=True):
     periods = 4
 
     if useOldSignal == True:
-        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
         # datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 5.5)
+        datetime_start = datetime.utcnow() - pd.Timedelta(days=30 * 1)
         signalsCollection = "signalsForex"
         firestore_col_name = "signalsAggrOpen_V2"
 

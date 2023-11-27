@@ -3,7 +3,7 @@ import pandas as pd
 
 
 async def getPricesStocks():
-    url = "https://financialmodelingprep.com/api/v3/available-traded/list?apikey=f2e16393402818828c467d34c8e817fe"
+    url = "https://financialmodelingprep.com/api/v3/available-traded/list?apikey=e9240f50007f36b71affe852b9cf2a83"
 
     try:
         symbols = await get_USDT_symbols_by_value("_datasets/data/_data_symbols_stock_options_sp500.csv")
