@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:signalbyt/constants/app_colors.dart';
 
 import '../../components/z_button.dart';
 import '../../components/z_card.dart';
@@ -10,7 +12,8 @@ import '../../models_providers/auth_provider.dart';
 import '../../utils/z_launch_url.dart';
 
 class SubscriptionPage extends StatefulWidget {
-  const SubscriptionPage({Key? key}) : super(key: key);
+  SubscriptionPage({Key? key, this.isOnboarding = false}) : super(key: key);
+  final bool isOnboarding;
 
   @override
   _SubscriptionPageState createState() => _SubscriptionPageState();
@@ -33,9 +36,20 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Upgrade'),
+        backgroundColor: Colors.transparent,
+        actions: [
+          if (widget.isOnboarding)
+            TextButton(
+              onPressed: () async {
+                await Provider.of<AuthProvider>(context, listen: false).init();
+              },
+              child: Text('Skip', style: TextStyle(color: Colors.white)),
+            ),
+        ],
       ),
       body: Stack(
         children: [
@@ -91,88 +105,191 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     final authProvider = Provider.of<AuthProvider>(context);
     AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context);
     final appControls = appControlsProvider.appControls;
-    // final AppControlLinks appControlLinks = appProvider.appControlLinks;
+    final selectedPackageId = authProvider.selectedPackageId;
     return Stack(
       children: [
         Scaffold(
+          backgroundColor: Colors.black,
           body: ListView(
             children: [
-              SizedBox(height: 16),
+              SvgPicture.asset('assets/svg/header-btc.svg', height: 140, width: double.infinity),
+              SizedBox(height: 32),
+              /* ------------------------------- Pro access ------------------------------- */
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
                   children: [
-                    SizedBox(height: 16),
-                    Text('Maximize Your Opportunities with a Plan Tailored to Your Success! 🚀.', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    Text('Get', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
+                    SizedBox(width: 6),
+                    Container(
+                      child: Text('Pro', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppCOLORS.green,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    SizedBox(width: 6),
+                    Text('Access', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              /* -------------------------- NEWS ANALYSIS SIGNALS ------------------------- */
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ZCard(
+                          height: 60,
+                          borderRadiusColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          margin: EdgeInsets.symmetric(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset('assets/svg/news.svg', height: 20, width: 20),
+                              SizedBox(width: 6),
+                              Text('News', style: TextStyle(height: 1), textAlign: TextAlign.center),
+                            ],
+                          )),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ZCard(
+                          height: 60,
+                          borderRadiusColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          margin: EdgeInsets.symmetric(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset('assets/svg/rocket.svg', height: 20, width: 20),
+                              SizedBox(width: 4),
+                              Text('AI \nSignals', style: TextStyle(height: 1), textAlign: TextAlign.center),
+                            ],
+                          )),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: ZCard(
+                          height: 60,
+                          borderRadiusColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          margin: EdgeInsets.symmetric(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset('assets/svg/analysis.svg', height: 20, width: 20),
+                              SizedBox(width: 4),
+                              Text('Analysis', style: TextStyle(height: 1), textAlign: TextAlign.center),
+                            ],
+                          )),
+                    ),
+                  ],
+                ),
+              ),
               for (var package in packages)
                 ZCard(
-                  onTap: () => purchasePackage(package),
-                  borderRadiusColor: Color(0xFF2C2F38),
+                  onTap: () {
+                    authProvider.selectedPackageId = package.identifier;
+                    setState(() {});
+                  },
+                  borderRadiusColor: selectedPackageId == package.identifier ? AppCOLORS.green : Color(0xFF2C2F38),
+                  borderWidth: 2,
                   color: Colors.transparent,
-                  child: Row(children: [
-                    Image.asset('assets/images/icon_subscription_thumbs_up.png', width: 40, height: 40),
-                    SizedBox(width: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * .675,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${package.storeProduct.priceString}'),
-                          SizedBox(height: 4),
-                          Text(
-                            removeAppNameFromString(package.storeProduct.description != '' ? package.storeProduct.description : package.storeProduct.title),
-                          ),
-                        ],
-                      ),
-                    )
-                  ]),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(getPackageType1(package), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                            Spacer(),
+                            if (selectedPackageId == package.identifier) Icon(Icons.check_circle_outline, color: AppCOLORS.green),
+                            if (selectedPackageId != package.identifier) Icon(Icons.circle_outlined, color: Colors.white30),
+                          ],
+                        ),
+                        SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Text('${package.storeProduct.priceString}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                            getPackageType2(package) == 'lifetime' ? Text('') : Text(' / ' + getPackageType2(package), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                            Spacer(),
+                            if (package.packageType != PackageType.annual)
+                              Container(
+                                decoration: BoxDecoration(color: AppCOLORS.gray, borderRadius: BorderRadius.circular(0)),
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                child: Text('Standard', style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w700)),
+                              ),
+                            if (package.packageType == PackageType.annual)
+                              Transform(
+                                transform: Matrix4.rotationZ(-0.05),
+                                child: Container(
+                                  decoration: BoxDecoration(color: AppCOLORS.green, borderRadius: BorderRadius.circular(0)),
+                                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  child: Text('Best Price!', style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w700)),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               SizedBox(height: 16),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              GestureDetector(
+                onTap: () {
+                  if (authProvider.selectedPackage != null) {
+                    purchasePackage(authProvider.selectedPackage!);
+                  }
+                },
+                child: Stack(
+                  alignment: AlignmentDirectional.centerEnd,
                   children: [
-                    Text(
-                        "You'll receive a complimentary three-day free trial to explore all the features. This plan provides full access to our essential features, including real-time trading signals for Forex, cryptocurrencies, and stocks",
-                        style: TextStyle(fontSize: 13)),
-                    SizedBox(height: 6),
-                    Text('Enjoy a comprehensive video learning section and a detailed trading guide to hone your trading skills.', style: TextStyle(fontSize: 13)),
-                    SizedBox(height: 6),
-                    Text('Stay informed with our Crypto ICO analysis, economic updates, and exclusive trading events.', style: TextStyle(fontSize: 13)),
+                    ZButton(
+                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      isLoading: authProvider.isloadingRestorePurchases,
+                      text: 'Start 3-Day FREE trial',
+                      backgroundColor: AppCOLORS.green,
+                      onTap: () {
+                        if (authProvider.selectedPackage != null) {
+                          purchasePackage(authProvider.selectedPackage!);
+                        }
+                      },
+                    ),
+                    Container(child: Icon(Icons.arrow_forward_outlined), margin: EdgeInsets.only(right: 32)),
                   ],
                 ),
               ),
-              SizedBox(height: 16),
-              if (!authProvider.authUser!.hasActiveSubscription)
-                ZButton(
-                  margin: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                  isLoading: authProvider.isloadingRestorePurchases,
-                  text: 'Restore Purchases',
-                  onTap: () => authProvider.restorePurchases(),
-                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ZCard(
-                    onTap: () {
-                      ZLaunchUrl.launchUrl(appControls.linkPivacy);
-                    },
+                    margin: EdgeInsets.symmetric(),
+                    borderRadiusColor: Colors.transparent,
+                    onTap: () => ZLaunchUrl.launchUrl(appControls.linkPivacy),
+                    shadowColor: Colors.transparent,
                     color: Colors.transparent,
-                    child: Text('Privacy Policy', style: TextStyle(color: Color(0xFFC1C1C1))),
+                    child: Text('Privacy Policy', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
                   ),
                   ZCard(
-                    onTap: () {
-                      ZLaunchUrl.launchUrl(appControls.linkTerms);
-                    },
+                    margin: EdgeInsets.symmetric(),
+                    borderRadiusColor: Colors.transparent,
+                    onTap: () => ZLaunchUrl.launchUrl(appControls.linkTerms),
                     color: Colors.transparent,
-                    child: Text('Term of Use', style: TextStyle(color: Color(0xFFC1C1C1))),
+                    shadowColor: Colors.transparent,
+                    child: Text('Term of Use', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
                   ),
+                  if (!authProvider.authUser!.hasActiveSubscription)
+                    ZCard(
+                      margin: EdgeInsets.symmetric(),
+                      borderRadiusColor: Colors.transparent,
+                      onTap: () => authProvider.restorePurchases(),
+                      color: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      child: Text('Restore purchases', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
+                    ),
                 ],
               ),
               SizedBox(height: 32),
@@ -262,5 +379,29 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   getYearlyPackage(packages) {
     return packages.firstWhere((element) => element.packageType == PackageType.annual);
+  }
+
+  String getPackageType1(Package package) {
+    if (package.packageType == PackageType.monthly) return 'Monthly';
+    if (package.packageType == PackageType.annual) return 'Annual';
+    if (package.packageType == PackageType.sixMonth) return '6 Months';
+    if (package.packageType == PackageType.threeMonth) return '3 Months';
+    if (package.packageType == PackageType.weekly) return 'Weekly';
+    if (package.packageType == PackageType.lifetime) return 'Lifetime';
+    if (package.packageType == PackageType.twoMonth) return '2 Months';
+    if (package.packageType == PackageType.custom) return 'Custom';
+    return 'Unknown';
+  }
+
+  String getPackageType2(Package package) {
+    if (package.packageType == PackageType.monthly) return 'month';
+    if (package.packageType == PackageType.annual) return 'year';
+    if (package.packageType == PackageType.sixMonth) return '6 months';
+    if (package.packageType == PackageType.threeMonth) return '3 months';
+    if (package.packageType == PackageType.weekly) return 'weekl';
+    if (package.packageType == PackageType.lifetime) return 'lifetime';
+    if (package.packageType == PackageType.twoMonth) return '2 months';
+    if (package.packageType == PackageType.custom) return 'custom';
+    return 'unknown';
   }
 }

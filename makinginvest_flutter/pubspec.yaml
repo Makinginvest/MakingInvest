@@ -2,7 +2,7 @@ name: signalbyt
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.112+112
+version: 1.0.116+116
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
@@ -35,7 +35,7 @@ dependencies:
   url_launcher: ^6.1.4
   uuid: ^3.0.4
   shimmer: ^3.0.0
-  configurable_expansion_tile_null_safety: ^3.1.1
+  configurable_expansion_tile_null_safety: ^3.3.2
   introduction_screen: ^3.0.0
   json_annotation: ^4.0.0
   flutter_icons:

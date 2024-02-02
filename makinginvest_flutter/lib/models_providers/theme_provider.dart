@@ -47,6 +47,7 @@ class Themes {
       appBarTheme: AppBarTheme(
           elevation: 0,
           centerTitle: false,
+          scrolledUnderElevation: 0,
           backgroundColor: scaffoldBackgroundColor,
           actionsIconTheme: IconThemeData(color: textColor),
           iconTheme: IconThemeData(color: textColor),

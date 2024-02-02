@@ -189,7 +189,7 @@ class _ZSignalCardState extends State<ZSignalCard> {
                       ),
                     ),
                   ),
-                  header: (isExpanded, _, heightFactor) => Flexible(
+                  header: (isExpanded, _, heightFactor, controller) => Flexible(
                     child: ZCard(
                       borderRadiusColor: isLightTheme ? AppCOLORS.cardBorderLight : AppCOLORS.cardBorderDark,
                       color: isLightTheme ? AppCOLORS.cardButtonLight : AppCOLORS.cardButtonDark,

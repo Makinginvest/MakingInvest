@@ -1,12 +1,13 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:signalbyt/pages/_app/onboarding_page.dart';
 
 import '../../components/z_card.dart';
 import '../../components/z_upgrade_subscription_card.dart';
@@ -72,6 +73,10 @@ class _MyAccountPageState extends State<MyAccountPage> {
                 ),
               ),
             SizedBox(height: 24),
+            // ZCard(
+            //   child: Text('Onbaording'),
+            //   onTap: () => Get.to(() => OnboardingPage1()),
+            // ),
             ZUpgradeSubscriptionCard(),
             SizedBox(height: 24),
             AccountNotificationItem(svgPath: 'assets/svg/notification.svg', title: 'Enable general notifications'),

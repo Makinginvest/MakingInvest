@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:signalbyt/pages/_app/onboarding_page.dart';
 
 import '../models/auth_user.dart';
 import '../models_services/_hive_helper.dart';
@@ -18,11 +19,19 @@ class AuthProvider with ChangeNotifier {
   AuthUser? get authUser => _authUser;
   StreamSubscription<AuthUser>? _streamSubscriptionAuthUser;
 
-  User? _user;
+  User? _fbUser;
 
   Future init({bool isFresh = true}) async {
-    _user = await FirebaseAuthService.getFirebaseUser();
-    if (_user == null) return;
+    _fbUser = await FirebaseAuthService.getFirebaseUser();
+    if (_fbUser == null) return;
+
+    _authUser = await FirebaseAuthService.getAuthUser();
+    if (_authUser == null) return;
+    if (_authUser?.isOnboarded == false) {
+      Get.offAll(() => OnboardingPage1());
+      return;
+    }
+    ;
 
     Get.offAll(() => AppNavbarPage());
     FirebaseAuthService.updateAppVersionLastLogin();
@@ -45,8 +54,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future initReload() async {
-    _user = await FirebaseAuthService.getFirebaseUser();
-    if (_user == null) return;
+    _fbUser = await FirebaseAuthService.getFirebaseUser();
+    if (_fbUser == null) return;
 
     _streamSubscriptionAuthUser?.cancel();
 
@@ -86,6 +95,12 @@ class AuthProvider with ChangeNotifier {
   EntitlementInfo? get entitlementInfo => _entitlementInfo;
   bool _isloadingRestorePurchases = false;
   bool get isloadingRestorePurchases => _isloadingRestorePurchases;
+  String selectedPackageId = '';
+
+  Package? get selectedPackage {
+    if (selectedPackageId == '') return null;
+    return _packages.firstWhere((element) => element.identifier == selectedPackageId);
+  }
 
   List<Package> _packages = [];
   List<Package> get packages => _packages;
@@ -95,7 +110,7 @@ class AuthProvider with ChangeNotifier {
 
   void _setRevenueCatId() async {
     try {
-      await Purchases.logIn(_user!.uid);
+      await Purchases.logIn(_fbUser!.uid);
       checkPurchasesStatus();
 
       Purchases.addCustomerInfoUpdateListener((customerInfo) {
@@ -132,6 +147,11 @@ class AuthProvider with ChangeNotifier {
 
     if (getPackages) {
       _packages = await RevenueCatSevice.getPackages();
+      if (packages.isEmpty) {
+        selectedPackageId = '';
+      } else {
+        selectedPackageId = packages[0].identifier;
+      }
       print('CALLLED checkPurchasesStatus _packages ${_packages}');
     }
 

@@ -50,7 +50,7 @@ class ZButton extends StatelessWidget {
         padding: padding ?? null,
         elevation: elevation,
         color: isDisabled ? Colors.grey : getColor(context),
-        borderRadius: borderRadius ?? BorderRadius.circular(8),
+        borderRadius: borderRadius ?? BorderRadius.circular(10),
         borderRadiusColor: borderRadiusColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

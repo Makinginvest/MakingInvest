@@ -34,7 +34,7 @@ class ZSignalCardResults extends StatelessWidget {
                     Container(
                       child: Text(
                         '14 days trades: ${signalAggr.results14Days?.total}',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                       ),
                       width: MediaQuery.of(context).size.width * .3,
                     ),
@@ -42,21 +42,21 @@ class ZSignalCardResults extends StatelessWidget {
                     Container(
                       child: Text(
                         'Win rate: ${signalAggr.results14Days?.getWinRate()}%',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                       ),
                     ),
                     if (!signalAggr.name.contains('forex'))
                       Container(
                         child: Text(
                           ' || Avg: ${ZFormat.numToPercent(signalAggr.results14Days?.avePct ?? 0)}',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                         ),
                       ),
                     if (signalAggr.name.contains('forex'))
                       Container(
                         child: Text(
                           ' || Avg: ${ZFormat.toPrecision((signalAggr.results14Days?.avePct ?? 0) * 10000, 0)} pips',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                         ),
                       ),
                   ],
@@ -67,7 +67,7 @@ class ZSignalCardResults extends StatelessWidget {
                     Container(
                       child: Text(
                         '30 days trades: ${signalAggr.results30Days?.total}',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                       ),
                       width: MediaQuery.of(context).size.width * .3,
                     ),
@@ -75,21 +75,21 @@ class ZSignalCardResults extends StatelessWidget {
                     Container(
                       child: Text(
                         'Win rate: ${signalAggr.results30Days?.getWinRate()}%',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                       ),
                     ),
                     if (!signalAggr.name.contains('forex'))
                       Container(
                         child: Text(
                           ' || Avg: ${ZFormat.numToPercent(signalAggr.results30Days?.avePct ?? 0)}',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                         ),
                       ),
                     if (signalAggr.name.contains('forex'))
                       Container(
                         child: Text(
                           ' || Avg: ${ZFormat.toPrecision((signalAggr.results30Days?.avePct ?? 0) * 10000, 0)} pips',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900),
+                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900),
                         ),
                       ),
                   ],

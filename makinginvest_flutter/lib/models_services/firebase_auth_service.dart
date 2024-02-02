@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info/package_info.dart';
@@ -321,6 +321,13 @@ class FirebaseAuthService {
     _firestore.collection('users').doc(fbUser.uid).update({
       'notificationsDisabled': FieldValue.arrayUnion([id])
     });
+  }
+
+  static Future<void> setOnboarded() async {
+    User? fbUser = FirebaseAuth.instance.currentUser;
+    if (fbUser == null) return;
+
+    _firestore.collection('users').doc(fbUser.uid).update({'isOnboarded': true});
   }
 
 /* ------------------------------ NOTE SIGNOUT ------------------------------ */

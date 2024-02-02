@@ -72,7 +72,7 @@ class _SignalsAggrsPageState extends State<SignalsAggrsPage> with TickerProvider
                         pinned: true,
                         floating: true,
                         snap: true,
-                        // toolbarHeight: 46,
+                        toolbarHeight: 46,
                         backgroundColor: isLightTheme ? Colors.grey.shade300 : AppCOLORS.bottomNavigationBarColorDark,
                         title: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,6 +119,7 @@ class _SignalsAggrsPageState extends State<SignalsAggrsPage> with TickerProvider
                           child: Container(
                             height: 44,
                             child: TabBar(
+                              dividerColor: Colors.transparent,
                               controller: _controller,
                               indicatorColor: AppCOLORS.yellow,
                               labelColor: Colors.white,

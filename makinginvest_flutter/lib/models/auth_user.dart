@@ -20,6 +20,8 @@ class AuthUser {
   String appVersion;
   @JsonKey(defaultValue: 0)
   num appBuildNumber;
+  @JsonKey(defaultValue: false)
+  bool isOnboarded;
   //
   @JsonKey(defaultValue: [])
   List<String> notificationsDisabled;
@@ -65,6 +67,7 @@ class AuthUser {
         lastLoginDateTimeDevice = '',
         appVersion = '',
         appBuildNumber = 0,
+        isOnboarded = false,
         notificationsDisabled = [],
         notificationsRiskyEnabled = [],
         isAnonymous = true,
