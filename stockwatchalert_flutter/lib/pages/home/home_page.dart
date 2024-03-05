@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:signalbyt/models_providers/app_controls_provider.dart';
+import 'package:signalbyt/pages/news/news_page.dart';
 
 import '../../components/z_annoucement_card.dart';
 import '../../components/z_card.dart';
@@ -11,8 +13,7 @@ import '../../models/announcement_aggr.dart';
 import '../../models/news_aggr.dart';
 import '../../models/news_wordpress.dart';
 import '../../models_providers/app_provider.dart';
-import 'annoucement_page.dart';
-import 'news_wordpress_page.dart';
+import '../announcement/annoucement_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -32,7 +33,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     AppProvider appProvider = Provider.of<AppProvider>(context);
     final annoucements = appProvider.announcementAggr.getTop5Announcements;
-    final newsWordpress = appProvider.newsWordpress.length > 4 ? appProvider.newsWordpress.sublist(0, 4) : appProvider.newsWordpress;
+
+    AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context);
+    final newsStocks = appControlsProvider.newsStocks.length > 4 ? appControlsProvider.newsStocks.sublist(0, 4) : appControlsProvider.newsStocks;
 
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
@@ -40,10 +43,12 @@ class _HomePageState extends State<HomePage> {
         shrinkWrap: true,
         children: [
           SizedBox(height: 16),
-          _buildHeading(title: 'Announcements', onTap: () => Get.to(() => AnnoucementsPage(annoucements: annoucements), fullscreenDialog: true)),
+          _buildHeading(title: 'Announcements', onTap: () => Get.to(() => AnnoucementsPage(), fullscreenDialog: true)),
           DisplayAnnoucement(annoucements: annoucements),
-          _buildHeading(title: 'News', onTap: () => Get.to(() => NewsWordpressPage(news: appProvider.newsWordpress), fullscreenDialog: true)),
-          DisplayNewsWordpress(news: newsWordpress),
+          // _buildHeading(title: 'News', onTap: () => Get.to(() => NewsWordpressPage(news: appProvider.newsWordpress), fullscreenDialog: true)),
+          // DisplayNewsWordpress(news: newsWordpress),
+          _buildHeading(title: 'News Stocks', onTap: () => Get.to(() => NewsPage(), fullscreenDialog: true)),
+          DisplayNews(news: newsStocks),
         ],
       ),
     );

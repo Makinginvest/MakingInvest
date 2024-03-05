@@ -4,7 +4,7 @@ import '../utils/z_launch_url.dart';
 
 import '../constants/app_colors.dart';
 import '../models/announcement_aggr.dart';
-import '../pages/home/annoucement_detail_page.dart';
+import '../pages/announcement/annoucement_detail_page.dart';
 import '../utils/z_format.dart';
 import 'z_card.dart';
 import 'z_image_display.dart';

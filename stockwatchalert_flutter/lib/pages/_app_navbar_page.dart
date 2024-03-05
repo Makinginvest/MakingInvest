@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:signalbyt/pages/announcement/annoucement_page.dart';
+import 'package:signalbyt/pages/market/marking_gainer_losers.dart';
+import 'package:signalbyt/pages/news/news_page.dart';
 
 import '../../../models_providers/navbar_provider.dart';
 import '../constants/app_colors.dart';
 import 'account/account_page.dart';
-import 'home/home_page.dart';
-import 'ico/ico_page.dart';
-import 'learn/learn_page.dart';
 import 'signals/signals_aggrs_init_page.dart';
 
 class AppNavbarPage extends StatefulWidget {
@@ -97,10 +97,10 @@ class _AppNavbarPageState extends State<AppNavbarPage> {
 /* ----------------------------- NOTE UserPages ----------------------------- */
 
   List<Widget> pages = [
-    HomePage(),
-    LearnPage(),
+    AnnoucementsPage(),
+    MarketGainerLosers(),
     SignalsAggrsInitPage(type: 'normal', key: ObjectKey('normal')),
-    IcoPage(),
+    NewsPage(),
     MyAccountPage(),
   ];
 }

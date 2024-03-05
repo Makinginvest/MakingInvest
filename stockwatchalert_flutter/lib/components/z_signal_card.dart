@@ -27,10 +27,10 @@ class _ZSignalCardState extends State<ZSignalCard> {
   @override
   Widget build(BuildContext context) {
     final isLightTheme = Theme.of(context).brightness == Brightness.light;
-    final AppControlsProvider appWsProvider = Provider.of<AppControlsProvider>(context);
+    final AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context);
     final isForex = widget.signal.market.toLowerCase() == 'forex';
 
-    final entryVsCurrentPrice = widget.signal.compareEntryPriceWithCurrentPrice(price: appWsProvider.getWSSymbolPriceSignal(widget.signal), isPips: isForex);
+    final entryVsCurrentPrice = widget.signal.compareEntryPriceWithCurrentPrice(price: appControlsProvider.getWSSymbolPriceSignal(widget.signal), isPips: isForex);
 
     return Column(
       children: [
@@ -166,7 +166,8 @@ class _ZSignalCardState extends State<ZSignalCard> {
                             width: MediaQuery.of(context).size.width * .375,
                             child: Text(widget.isClosed ? 'Targets' : "Current Price", style: TextStyle()),
                           ),
-                          if (!widget.isClosed) Text(appWsProvider.getWSSymbolPriceSignal(widget.signal).toString(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
+                          if (!widget.isClosed)
+                            Text(appControlsProvider.getWSSymbolPriceSignal(widget.signal).toString(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)),
                           Spacer(),
                           if (!widget.isClosed)
                             Text(
@@ -177,7 +178,7 @@ class _ZSignalCardState extends State<ZSignalCard> {
                                 leverage: widget.signal.leverage,
                               ),
                               style: TextStyle(
-                                  color: widget.signal.compareEntryPriceWithCurrentPrice(price: appWsProvider.getWSSymbolPriceSignal(widget.signal)) < 0
+                                  color: widget.signal.compareEntryPriceWithCurrentPrice(price: appControlsProvider.getWSSymbolPriceSignal(widget.signal)) < 0
                                       ? AppColors.red
                                       : AppColors.green,
                                   fontSize: 14,
@@ -202,7 +203,7 @@ class _ZSignalCardState extends State<ZSignalCard> {
                           Container(
                               width: MediaQuery.of(context).size.width * .375,
                               child: Text(widget.isClosed ? 'Targets' : 'Current price', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900))),
-                          if (!widget.isClosed) Text(appWsProvider.getWSSymbolPriceSignal(widget.signal).toString(), style: TextStyle()),
+                          if (!widget.isClosed) Text(appControlsProvider.getWSSymbolPriceSignal(widget.signal).toString(), style: TextStyle()),
                           Spacer(),
                           if (!widget.isClosed)
                             Text(
@@ -213,7 +214,7 @@ class _ZSignalCardState extends State<ZSignalCard> {
                                 leverage: widget.signal.leverage,
                               ),
                               style: TextStyle(
-                                  color: widget.signal.compareEntryPriceWithCurrentPrice(price: appWsProvider.getWSSymbolPriceSignal(widget.signal)) < 0
+                                  color: widget.signal.compareEntryPriceWithCurrentPrice(price: appControlsProvider.getWSSymbolPriceSignal(widget.signal)) < 0
                                       ? AppColors.red
                                       : AppColors.green,
                                   fontSize: 14,

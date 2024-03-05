@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../components/z_image_display.dart';
 import '../../constants/app_colors.dart';
 import '../models/post_aggr.dart';
-import '../pages/learn/post_details_page.dart';
+import '../_deprecated/learn/post_details_page.dart';
 import '../utils/z_format.dart';
 import 'z_card.dart';
 
