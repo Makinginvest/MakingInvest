@@ -14,10 +14,22 @@ class ZSearch extends StatefulWidget {
   final EdgeInsets? padding;
   final String? labelText;
   final Widget? prefix;
+  final String? hintText;
   final bool filled;
   final double? height;
-  ZSearch({Key? key, this.onValueChanged, this.controller, this.initialValue, this.margin, this.padding, this.labelText, this.prefix, this.filled = false, this.height})
-      : super(key: key);
+  ZSearch({
+    Key? key,
+    this.onValueChanged,
+    this.controller,
+    this.initialValue,
+    this.margin,
+    this.padding,
+    this.labelText,
+    this.hintText,
+    this.prefix,
+    this.filled = false,
+    this.height,
+  }) : super(key: key);
 
   @override
   State<ZSearch> createState() => _ZSearchState();
@@ -56,7 +68,7 @@ class _ZSearchState extends State<ZSearch> {
     return Container(
       padding: widget.padding ?? EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       margin: widget.margin ?? EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-      height: widget.height,
+      height: widget.height ?? 40,
       child: TextField(
         onChanged: (v) {
           if (widget.onValueChanged != null) widget.onValueChanged!(v);
@@ -68,6 +80,8 @@ class _ZSearchState extends State<ZSearch> {
         decoration: InputDecoration(
             border: OutlineInputBorder(borderSide: BorderSide(color: enabledBorderColor, width: 1), borderRadius: borderRadius),
             labelText: widget.labelText,
+            hintText: widget.hintText,
+            hintStyle: TextStyle(fontSize: 14),
             prefixIcon: SizedBox.shrink(child: widget.prefix ?? Icon(Icons.search)),
             suffixIcon: valueController?.text != '' ? _buildClose(context) : null,
             prefixStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color),
@@ -75,7 +89,7 @@ class _ZSearchState extends State<ZSearch> {
             filled: widget.filled,
             suffixStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color),
             labelStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color),
-            contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: enabledBorderColor, width: 1), borderRadius: borderRadius),
             focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: focusedBorderColor, width: 1), borderRadius: borderRadius),
             errorBorder: OutlineInputBorder(borderSide: BorderSide(color: errorBorderColor, width: 1), borderRadius: borderRadius),

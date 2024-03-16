@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:signalbyt/pages/announcement/annoucement_page.dart';
+import 'package:signalbyt/pages/home/home_page.dart';
 import 'package:signalbyt/pages/market/marking_gainer_losers.dart';
 import 'package:signalbyt/pages/news/news_page.dart';
 
@@ -97,7 +98,7 @@ class _AppNavbarPageState extends State<AppNavbarPage> {
 /* ----------------------------- NOTE UserPages ----------------------------- */
 
   List<Widget> pages = [
-    AnnoucementsPage(),
+    HomePage(),
     MarketGainerLosers(),
     SignalsAggrsInitPage(type: 'normal', key: ObjectKey('normal')),
     NewsPage(),

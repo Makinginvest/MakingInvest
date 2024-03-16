@@ -86,8 +86,8 @@ class _SignalsAggrsPageState extends State<SignalsAggrsPage> with TickerProvider
                                     TextSpan(
                                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.white),
                                       children: [
-                                        TextSpan(text: 'Stock ', style: TextStyle(color: AppColors.green)),
-                                        TextSpan(text: 'Watch Alert', style: TextStyle(color: AppColors.white)),
+                                        TextSpan(text: 'Stock', style: TextStyle(color: AppColors.green)),
+                                        TextSpan(text: 'WatchAlert', style: TextStyle(color: AppColors.white)),
                                       ],
                                     ),
                                   ),

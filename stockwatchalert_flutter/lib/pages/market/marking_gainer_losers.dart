@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:signalbyt/components/z_app_bar_title.dart';
 import 'package:signalbyt/constants/app_colors.dart';
 import 'package:signalbyt/models_providers/app_controls_provider.dart';
 import 'package:signalbyt/pages/market/marking_gainer_losers_details_page.dart';
@@ -39,21 +40,7 @@ class _MarketGainerLosersState extends State<MarketGainerLosers> with TickerProv
                           floating: true,
                           snap: true,
                           toolbarHeight: 46,
-                          title: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text.rich(
-                                TextSpan(
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.white),
-                                  children: [
-                                    TextSpan(text: 'Stock ', style: TextStyle(color: AppColors.green)),
-                                    TextSpan(text: 'Watch Alert', style: TextStyle(color: AppColors.white)),
-                                  ],
-                                ),
-                              ),
-                              Text('Your Ultimate Stock Source', style: TextStyle(fontSize: 10, color: AppColors.white)),
-                            ],
-                          ),
+                          title: AppBarTitle(),
                           bottom: PreferredSize(
                             preferredSize: Size.fromHeight(44),
                             child: Container(

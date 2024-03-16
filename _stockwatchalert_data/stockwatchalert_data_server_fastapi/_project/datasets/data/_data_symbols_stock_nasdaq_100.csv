@@ -1,0 +1,103 @@
+symbol,name,nasdaq
+ATVI,Activision Blizzard,Yes
+ADBE,Adobe Inc.,Yes
+ADP,ADP,Yes
+ABNB,Airbnb,Yes
+ALGN,Align Technology,Yes
+GOOGL,Alphabet Inc. (Class A),Yes
+GOOG,Alphabet Inc. (Class C),Yes
+AMZN,Amazon,Yes
+AMD,AMD,Yes
+AEP,American Electric Power,Yes
+AMGN,Amgen,Yes
+ADI,Analog Devices,Yes
+ANSS,Ansys,Yes
+AAPL,Apple Inc.,Yes
+AMAT,Applied Materials,Yes
+ASML,ASML Holding,Yes
+AZN,AstraZeneca,Yes
+TEAM,Atlassian,Yes
+ADSK,Autodesk,Yes
+BIDU,Baidu,Yes
+BIIB,Biogen,Yes
+BKNG,Booking Holdings,Yes
+AVGO,Broadcom Inc.,Yes
+CDNS,Cadence Design Systems,Yes
+CHTR,Charter Communications,Yes
+CTAS,Cintas,Yes
+CSCO,Cisco,Yes
+CTSH,Cognizant,Yes
+CMCSA,Comcast,Yes
+CEG,Constellation Energy,Yes
+CPRT,Copart,Yes
+COST,Costco,Yes
+CRWD,CrowdStrike,Yes
+CSX,CSX Corporation,Yes
+DDOG,Datadog,Yes
+DXCM,DexCom,Yes
+DOCU,DocuSign,Yes
+DLTR,Dollar Tree,Yes
+EBAY,eBay,Yes
+EA,Electronic Arts,Yes
+EXC,Exelon,Yes
+FAST,Fastenal,Yes
+FISV,Fiserv,Yes
+FTNT,Fortinet,Yes
+GILD,Gilead Sciences,Yes
+HON,Honeywell,Yes
+IDXX,Idexx Laboratories,Yes
+ILMN,"Illumina, Inc.",Yes
+INTC,Intel,Yes
+INTU,Intuit,Yes
+ISRG,Intuitive Surgical,Yes
+JD,JD.com,Yes
+KDP,Keurig Dr Pepper,Yes
+KLAC,KLA Corporation,Yes
+KHC,Kraft Heinz,Yes
+LRCX,Lam Research,Yes
+LCID,Lucid Motors,Yes
+LULU,Lululemon,Yes
+MAR,Marriott International,Yes
+MRVL,Marvell Technology,Yes
+MTCH,Match Group,Yes
+MELI,MercadoLibre,Yes
+META,Meta Platforms,Yes
+MCHP,Microchip Technology,Yes
+MU,Micron Technology,Yes
+MSFT,Microsoft,Yes
+MRNA,Moderna,Yes
+MDLZ,Mondel?z International,Yes
+MNST,Monster Beverage,Yes
+NTES,NetEase,Yes
+NFLX,Netflix,Yes
+NVDA,Nvidia,Yes
+NXPI,NXP,Yes
+ORLY,O'Reilly Automotive,Yes
+OKTA,"Okta, Inc.",Yes
+ODFL,Old Dominion Freight Line,Yes
+PCAR,Paccar,Yes
+PANW,Palo Alto Networks,Yes
+PAYX,Paychex,Yes
+PYPL,PayPal,Yes
+PEP,PepsiCo,Yes
+PDD,Pinduoduo,Yes
+QCOM,Qualcomm,Yes
+REGN,Regeneron,Yes
+ROST,Ross Stores,Yes
+SGEN,Seagen,Yes
+SIRI,Sirius XM,Yes
+SWKS,Skyworks Solutions,Yes
+SPLK,Splunk,Yes
+SBUX,Starbucks,Yes
+SNPS,Synopsys,Yes
+TMUS,T-Mobile US,Yes
+TSLA,"Tesla, Inc.",Yes
+TXN,Texas Instruments,Yes
+VRSN,Verisign,Yes
+VRSK,Verisk,Yes
+VRTX,Vertex Pharmaceuticals,Yes
+WBA,Walgreens Boots Alliance,Yes
+WDAY,"Workday, Inc.",Yes
+XEL,Xcel Energy,Yes
+ZM,Zoom Video Communications,Yes
+ZS,Zscaler,Yes

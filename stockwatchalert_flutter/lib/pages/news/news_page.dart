@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:signalbyt/constants/app_colors.dart';
+import 'package:signalbyt/components/z_app_bar_title.dart';
+
 import 'package:signalbyt/models_providers/app_controls_provider.dart';
 
 import '../../components/z_news_card.dart';
@@ -21,20 +22,7 @@ class _NewsPageState extends State<NewsPage> {
     final news = appControlsProvider.newsStocks;
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          children: [
-            Text.rich(
-              TextSpan(
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.white),
-                children: [
-                  TextSpan(text: 'Stock ', style: TextStyle(color: AppColors.green)),
-                  TextSpan(text: 'Watch Alert', style: TextStyle(color: AppColors.white)),
-                ],
-              ),
-            ),
-            Text('Your Ultimate Stock Source', style: TextStyle(fontSize: 10, color: AppColors.white)),
-          ],
-        ),
+        title: AppBarTitle(),
       ),
       body: ListView.builder(
         shrinkWrap: true,

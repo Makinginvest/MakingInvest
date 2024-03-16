@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../components/z_app_bar_title.dart';
 import '../../components/z_card.dart';
 import '../../components/z_upgrade_subscription_card.dart';
 import '../../constants/app_colors.dart';
@@ -53,20 +54,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Column(
-            children: [
-              Text.rich(
-                TextSpan(
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.white),
-                  children: [
-                    TextSpan(text: 'Stock ', style: TextStyle(color: AppColors.green)),
-                    TextSpan(text: 'Watch Alert', style: TextStyle(color: AppColors.white)),
-                  ],
-                ),
-              ),
-              Text('Your Ultimate Stock Source', style: TextStyle(fontSize: 10, color: AppColors.white)),
-            ],
-          ),
+          title: AppBarTitle(),
         ),
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 16),

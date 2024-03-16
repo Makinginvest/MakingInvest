@@ -1,0 +1,35 @@
+version: '3.3'
+
+services:
+  #  DATA SERVICE
+  stockwatchalert-python-data:
+    build: .
+    image: stockwatchalert-python-data
+    container_name: stockwatchalert-python-data
+    ports:
+      - 8070:8070
+    restart: unless-stopped
+    networks:
+      - traefik-network
+    environment:
+      - ALLOW_CRON=True
+      - PRODUCTION=True
+      - DATA_MODE=True
+      - PORT=8070
+      - WORKERS=1
+      - HOST=0.0.0.0
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.stockwatchalert-python-data.rule=Host(`makinginvest-server-python-api-data-v1.makinginvest.com`)'
+      - 'traefik.http.routers.stockwatchalert-python-data.entrypoints=websecure'
+      - 'traefik.http.routers.stockwatchalert-python-data.tls.certresolver=myresolver'
+      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+      - 'traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)'
+      - 'traefik.http.routers.redirs.entrypoints=web'
+      - 'traefik.http.routers.redirs.middlewares=redirect-to-https'
+    volumes:
+      - '/root/vol-logs:/usr/src/app/logs/'
+
+networks:
+  traefik-network:
+    external: true
