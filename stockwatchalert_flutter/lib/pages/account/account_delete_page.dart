@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stockwatchalert/models_providers/app_controls_provider.dart';
 
 import '../../components/z_button.dart';
 import '../../components/z_text_form_field.dart';
@@ -66,12 +67,13 @@ class _AccountDeletePageState extends State<AccountDeletePage> {
   }
 
   void _onSubmit() async {
+    AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context, listen: false);
     if (formKey.currentState == null) return;
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       setState(() => isLoading = true);
 
-      var res = await ApiAuthUserService.deleteAccount();
+      var res = await ApiAuthUserService.deleteAccount(appControlsProvider.appControls.apiUrlV1);
 
       Provider.of<AppProvider>(context, listen: false).cancleAllStreams();
       await Provider.of<AuthProvider>(context, listen: false).initReload();

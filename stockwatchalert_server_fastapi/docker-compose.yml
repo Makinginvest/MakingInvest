@@ -14,7 +14,6 @@ services:
     environment:
       - ALLOW_CRON=False
       - PRODUCTION=True
-      - DATA_MODE=False
       - WEBSOCKET_MODE=False
       - API_MODE=True
       - PORT=8072
@@ -22,7 +21,7 @@ services:
       - HOST=0.0.0.0
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.makinginvest-python-api.rule=Host(`makinginvest-server-python-api-api-v1.makinginvest.com`)'
+      - 'traefik.http.routers.makinginvest-python-api.rule=Host(`makinginvest-server-python-api-v1.api.makinginvest.com`)'
       - 'traefik.http.routers.makinginvest-python-api.entrypoints=websecure'
       - 'traefik.http.routers.makinginvest-python-api.tls.certresolver=myresolver'
       - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
@@ -32,40 +31,11 @@ services:
     volumes:
       - '/root/vol-logs:/usr/src/app/logs/'
 
-  #  DATA SERVICE
-  makinginvest-python-data:
-    build: .
-    image: makinginvest-python-data
-    container_name: makinginvest-python-data
-    ports:
-      - 8070:8070
-    restart: unless-stopped
-    networks:
-      - traefik-network
-    environment:
-      - ALLOW_CRON=True
-      - PRODUCTION=True
-      - DATA_MODE=True
-      - PORT=8070
-      - WORKERS=1
-      - HOST=0.0.0.0
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.makinginvest-python-data.rule=Host(`makinginvest-server-python-api-data-v1.makinginvest.com`)'
-      - 'traefik.http.routers.makinginvest-python-data.entrypoints=websecure'
-      - 'traefik.http.routers.makinginvest-python-data.tls.certresolver=myresolver'
-      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
-      - 'traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)'
-      - 'traefik.http.routers.redirs.entrypoints=web'
-      - 'traefik.http.routers.redirs.middlewares=redirect-to-https'
-    volumes:
-      - '/root/vol-logs:/usr/src/app/logs/'
-
   #  WEBSOCKET
-  makinginvest-python-websocket:
+  makinginvest-python-api-websocket:
     build: .
-    image: makinginvest-python-websocket
-    container_name: makinginvest-python-websocket
+    image: makinginvest-python-api-websocket
+    container_name: makinginvest-python-api-websocket
     ports:
       - 8071:8071
     restart: unless-stopped
@@ -74,16 +44,15 @@ services:
     environment:
       - ALLOW_CRON=False
       - PRODUCTION=True
-      - DATA_MODE=False
       - WEBSOCKET_MODE=True
       - PORT=8071
       - WORKERS=1
       - HOST=0.0.0.0
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.makinginvest-python-websocket.rule=Host(`makinginvest-server-python-api-websocket-v1.makinginvest.com`)'
-      - 'traefik.http.routers.makinginvest-python-websocket.entrypoints=websecure'
-      - 'traefik.http.routers.makinginvest-python-websocket.tls.certresolver=myresolver'
+      - 'traefik.http.routers.makinginvest-python-api-websocket.rule=Host(`makinginvest-server-python-api-websocket-v1.api.makinginvest.com`)'
+      - 'traefik.http.routers.makinginvest-python-api-websocket.entrypoints=websecure'
+      - 'traefik.http.routers.makinginvest-python-api-websocket.tls.certresolver=myresolver'
       - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
       - 'traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)'
       - 'traefik.http.routers.redirs.entrypoints=web'
@@ -92,10 +61,10 @@ services:
       - '/root/vol-logs:/usr/src/app/logs/'
 
   #  Main SERVICE
-  makinginvest-python-engines-main:
+  makinginvest-python-engines-driver:
     build: .
-    image: makinginvest-python-engines-main
-    container_name: makinginvest-python-engines-main
+    image: makinginvest-python-engines-driver
+    container_name: makinginvest-python-engines-driver
     ports:
       - 8073:8073
     restart: unless-stopped
@@ -104,15 +73,14 @@ services:
     environment:
       - ALLOW_CRON=True
       - PRODUCTION=True
-      - DATA_MODE=False
       - PORT=8073
       - WORKERS=1
       - HOST=0.0.0.0
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.makinginvest-python-engines-main.rule=Host(`makinginvest-server-python-api-engines-main-v1.makinginvest.com`)'
-      - 'traefik.http.routers.makinginvest-python-engines-main.entrypoints=websecure'
-      - 'traefik.http.routers.makinginvest-python-engines-main.tls.certresolver=myresolver'
+      - 'traefik.http.routers.makinginvest-python-engines-driver.rule=Host(`makinginvest-server-python-api-engines-driver-v1.api.makinginvest.com`)'
+      - 'traefik.http.routers.makinginvest-python-engines-driver.entrypoints=websecure'
+      - 'traefik.http.routers.makinginvest-python-engines-driver.tls.certresolver=myresolver'
       - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
       - 'traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)'
       - 'traefik.http.routers.redirs.entrypoints=web'
@@ -121,10 +89,10 @@ services:
       - '/root/vol-logs:/usr/src/app/logs/'
 
   #  Engines crypto SERVICE
-  makinginvest-python-engines-all:
+  makinginvest-python-engines-worker:
     build: .
-    image: makinginvest-python-engines-all
-    container_name: makinginvest-python-engines-all
+    image: makinginvest-python-engines-worker
+    container_name: makinginvest-python-engines-worker
     ports:
       - 8074:8074
     restart: unless-stopped
@@ -133,15 +101,14 @@ services:
     environment:
       - ALLOW_CRON=False
       - PRODUCTION=True
-      - DATA_MODE=False
       - PORT=8074
       - WORKERS=16
       - HOST=0.0.0.0
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.makinginvest-python-engines-all.rule=Host(`makinginvest-server-python-api-engines-all-v1.makinginvest.com`)'
-      - 'traefik.http.routers.makinginvest-python-engines-all.entrypoints=websecure'
-      - 'traefik.http.routers.makinginvest-python-engines-all.tls.certresolver=myresolver'
+      - 'traefik.http.routers.makinginvest-python-engines-worker.rule=Host(`makinginvest-server-python-api-engines-worker-v1.api.makinginvest.com`)'
+      - 'traefik.http.routers.makinginvest-python-engines-worker.entrypoints=websecure'
+      - 'traefik.http.routers.makinginvest-python-engines-worker.tls.certresolver=myresolver'
       - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
       - 'traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)'
       - 'traefik.http.routers.redirs.entrypoints=web'

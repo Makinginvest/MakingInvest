@@ -46,10 +46,10 @@ PRODUCTION=False uvicorn app.main:app --host=0.0.0.0 --port=8999 --workers=8 --r
 
 echo 'Pulling Server Main'
 
-ssh root@5.78.84.141 << EOF
-cd makinginvest-python-engines-main/
+ssh root@188.34.177.82 << EOF
+cd makinginvest-python-engines-driver/
 EOF
 
-rsync -avrz --delete-excluded root@5.78.84.141:/root/makinginvest-python-engines-main/ ./makinginvest-python-engines-main
+rsync -avrz --delete-excluded root@188.34.177.82:/root/makinginvest-python-engines-driver/ ./makinginvest-python-engines-driver
 
 echo 'Pulled Server Main'

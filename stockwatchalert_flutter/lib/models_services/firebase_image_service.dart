@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:uuid/uuid.dart';
 
 class FirebaseImageService {
   static Future<String> uploadImgFireStorageFile({required File imageFile}) async {

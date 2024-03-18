@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stockwatchalert/components/z_card.dart';
+import 'package:stockwatchalert/models/post_aggr.dart';
+import 'package:stockwatchalert/pages/learn/post_details_page.dart';
+import 'package:stockwatchalert/utils/z_format.dart';
 
 import '../../components/z_image_display.dart';
 import '../../constants/app_colors.dart';
-import '../models/post_aggr.dart';
-import '../_deprecated/learn/post_details_page.dart';
-import '../utils/z_format.dart';
-import 'z_card.dart';
 
 class ZPostCard extends StatelessWidget {
   const ZPostCard({Key? key, required this.post}) : super(key: key);

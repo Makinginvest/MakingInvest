@@ -2,14 +2,12 @@ import io
 import os
 import aiohttp
 import pandas as pd
-from pyparsing import col
-from app.a_database_data.db_connect_data import database_mongodb_data
+from app._database.db_connect_data import database_mongodb_data
 
 import zipfile
 from datetime import date, timedelta
 
-
-from app.helpers.a_functions_mongodb.crypto__functions import get_USDT_symbols_by_value
+from app.helpers._functions.get_symbols_local_v1 import get_symbols_by_value_v1
 
 
 async def update_all_symbols_from_data_db_mongodb_aggr():
@@ -35,12 +33,16 @@ async def update_all_symbols_from_data_db_mongodb_aggr():
         df_stocks = pd.DataFrame(symbols_stocks["data"])
 
         # Save DataFrames to CSV files
-        df_crypto.to_csv("_datasets/data/_data_symbols_crypto_usdt_busd.csv", index=False)
-        df_crypto_futures.to_csv("_datasets/data/_data_symbols_crypto_usdt_busd_futures.csv", index=False)
-        df_forex.to_csv("_datasets/data/_data_symbols_forex_oanda_main.csv", index=False)
-        df_stocks.to_csv("_datasets/data/_data_symbols_stock_nasdaq_100.csv", index=False)
+        df_crypto.to_csv("_project/datasets/data/_data_symbols_crypto_usdt_busd.csv", index=False)
+        df_crypto_futures.to_csv("_project/datasets/data/_data_symbols_crypto_usdt_busd_futures.csv", index=False)
+        df_forex.to_csv("_project/datasets/data/_data_symbols_forex_oanda_main.csv", index=False)
+        df_stocks.to_csv("_project/datasets/data/_data_symbols_stock_nasdaq_100.csv", index=False)
 
-        return {"crypto": df_crypto, "forex": df_forex, "stocks": df_stocks}
+        return {
+            "crypto": df_crypto,
+            "forex": df_forex,
+            "stocks": df_stocks,
+        }
 
     except Exception as e:
         print(e)
@@ -53,7 +55,11 @@ async def update_all_symbols_mongodb_aggr():
         symbols_forex = await update_symbols_forex_mongodb_aggr()
         symbols_stocks = await update_symbols_stocks_mongodb_aggr()
 
-        return {"crypto": symbols_crypto, "forex": symbols_forex, "stocks": symbols_stocks}
+        return {
+            "crypto": symbols_crypto,
+            "forex": symbols_forex,
+            "stocks": symbols_stocks,
+        }
 
     except Exception as e:
         print(e)
@@ -77,7 +83,7 @@ async def update_symbols_crypto_mongodb_aggr():
 
 async def update_symbols_forex_mongodb_aggr():
     try:
-        symbols = pd.read_csv("_datasets/data/_data_symbols_forex_oanda_main.csv")
+        symbols = pd.read_csv("_project/datasets/data/_data_symbols_forex_oanda_main.csv")
         symbols = symbols[["symbol"]]
         symbols["symbol"] = symbols["symbol"].apply(lambda x: x.replace("/", ""))
 
@@ -94,7 +100,7 @@ async def update_symbols_forex_mongodb_aggr():
 
 async def update_symbols_stocks_mongodb_aggr():
     try:
-        symbols = pd.read_csv("_datasets/data/_data_symbols_stock_options_sp500.csv")
+        symbols = pd.read_csv("_project/datasets/data/_data_symbols_stock_options_sp500.csv")
         collection = database_mongodb_data["symbolsAggr"]
         await collection.update_one({"type": "stocks"}, {"$set": {"data": symbols.to_dict("records")}}, upsert=True)
 
@@ -120,11 +126,23 @@ async def generate_binance_usdt_busd_csv():
                 if symbol["s"].endswith("USDT"):
                     new_data.append(symbol)
 
-            symbols_only = [symbol["s"].replace("USDT", "") for symbol in new_data]
+            symbols_only = [
+                symbol["s"].replace(
+                    "USDT",
+                    "",
+                )
+                for symbol in new_data
+            ]
 
             for symbol in data:
                 if symbol["s"].endswith("BUSD"):
-                    if symbol["s"].replace("BUSD", "") not in symbols_only:
+                    if (
+                        symbol["s"].replace(
+                            "BUSD",
+                            "",
+                        )
+                        not in symbols_only
+                    ):
                         new_data.append(symbol)
 
             # remove BULLUSDT and BEARUSDT and DOWNUSDT and UPUSDT if sigbal contains them
@@ -137,22 +155,32 @@ async def generate_binance_usdt_busd_csv():
             new_data = [symbol for symbol in new_data if symbol["s"] not in symbols_to_delete]
 
             new_data = pd.DataFrame(new_data)
-            new_data.rename(columns={"s": "symbol"}, inplace=True)
-            new_data.to_csv("_datasets/data/_data_symbols_crypto_usdt_busd.csv", index=False)
+            new_data.rename(
+                columns={"s": "symbol"},
+                inplace=True,
+            )
+            new_data.to_csv(
+                "_project/datasets/data/_data_symbols_crypto_usdt_busd.csv",
+                index=False,
+            )
 
             return new_data
 
 
-async def get_binance_data_daily_spot_symbol_value(path="_datasets/data/_data_symbols_crypto_usdt_busd.csv"):
+async def get_binance_data_daily_spot_symbol_value(path="_project/datasets/data/_data_symbols_crypto_usdt_busd.csv"):
     yesterday = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
-    symbols = await get_USDT_symbols_by_value(path)
+    symbols = await get_symbols_by_value_v1(path)
     symbols = [s.replace("/", "") for s in symbols]
     # symbols = symbols[:10]
     file_paths = []
 
     try:
         async with aiohttp.ClientSession() as session:
-            for i in range(0, len(symbols), 5):
+            for i in range(
+                0,
+                len(symbols),
+                5,
+            ):
                 symbol_batch = symbols[i : i + 5]
                 for s in symbol_batch:
                     url = f"https://data.binance.vision/data/spot/daily/klines/{s}/1d/{s}-1d-{yesterday}.zip"
@@ -160,8 +188,8 @@ async def get_binance_data_daily_spot_symbol_value(path="_datasets/data/_data_sy
                         async with session.get(url) as resp:
                             r = await resp.read()
                             z = zipfile.ZipFile(io.BytesIO(r))
-                            z.extractall("_datasets/_temp/binance_raw")
-                            file_paths.append(f"_datasets/_temp/binance_raw/{s}-1d-{yesterday}.csv")
+                            z.extractall("_project/datasets/_temp/binance_raw")
+                            file_paths.append(f"_project/datasets/_temp/binance_raw/{s}-1d-{yesterday}.csv")
                     except Exception as e:
                         pass
             await session.close()
@@ -169,24 +197,62 @@ async def get_binance_data_daily_spot_symbol_value(path="_datasets/data/_data_sy
         df = pd.DataFrame()
         for f in file_paths:
             symbol_name = f.split("/")[-1].split(".")[0].split("-")[0]
-            new_df = pd.read_csv(f, header=None)
-            columns = ["time", "open", "high", "low", "close", "volume", "1", "2", "3", "4", "5", "6"]
+            new_df = pd.read_csv(
+                f,
+                header=None,
+            )
+            columns = [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+            ]
             new_df.columns = columns
-            new_df.drop(new_df.columns[6:], axis=1, inplace=True)
+            new_df.drop(
+                new_df.columns[6:],
+                axis=1,
+                inplace=True,
+            )
             new_df["symbol"] = symbol_name
 
-            df = pd.concat([df, new_df], ignore_index=True)
+            df = pd.concat(
+                [
+                    df,
+                    new_df,
+                ],
+                ignore_index=True,
+            )
 
         df["value"] = df["volume"] * df["close"]
-        df = df[["symbol", "close", "volume", "value"]]
+        df = df[
+            [
+                "symbol",
+                "close",
+                "volume",
+                "value",
+            ]
+        ]
         df = df.sort_values(by=["value"], ascending=False)
-        df.to_csv("_datasets/data/_data_symbols_crypto_usdt_busd.csv", index=False)
+        df.to_csv("_project/datasets/data/_data_symbols_crypto_usdt_busd.csv", index=False)
 
         for f in file_paths:
             os.remove(f)
         # return [symbol, value] as json
 
-        df = df[["symbol", "value"]]
+        df = df[
+            [
+                "symbol",
+                "value",
+            ]
+        ]
         return df.to_dict("records")
 
     except Exception as e:
@@ -208,11 +274,23 @@ async def generate_binance_future_usdt_busd_csv():
                 if symbol["s"].endswith("USDT"):
                     new_data.append(symbol)
 
-            symbols_only = [symbol["s"].replace("USDT", "") for symbol in new_data]
+            symbols_only = [
+                symbol["s"].replace(
+                    "USDT",
+                    "",
+                )
+                for symbol in new_data
+            ]
 
             for symbol in data:
                 if symbol["s"].endswith("BUSD"):
-                    if symbol["s"].replace("BUSD", "") not in symbols_only:
+                    if (
+                        symbol["s"].replace(
+                            "BUSD",
+                            "",
+                        )
+                        not in symbols_only
+                    ):
                         new_data.append(symbol)
 
             # remove BULLUSDT and BEARUSDT and DOWNUSDT and UPUSDT if sigbal contains them
@@ -225,22 +303,32 @@ async def generate_binance_future_usdt_busd_csv():
             new_data = [symbol for symbol in new_data if symbol["s"] not in symbols_to_delete]
 
             new_data = pd.DataFrame(new_data)
-            new_data.rename(columns={"s": "symbol"}, inplace=True)
-            new_data.to_csv("_datasets/data/_data_symbols_crypto_usdt_busd_futures.csv", index=False)
+            new_data.rename(
+                columns={"s": "symbol"},
+                inplace=True,
+            )
+            new_data.to_csv(
+                "_project/datasets/data/_data_symbols_crypto_usdt_busd_futures.csv",
+                index=False,
+            )
 
             return new_data
 
 
-async def get_binance_data_daily_futures_symbol_value(path="_datasets/data/_data_symbols_crypto_usdt_busd_futures.csv"):
+async def get_binance_data_daily_futures_symbol_value(path="_project/datasets/data/_data_symbols_crypto_usdt_busd_futures.csv"):
     yesterday = (date.today() - timedelta(days=2)).strftime("%Y-%m-%d")
-    symbols = await get_USDT_symbols_by_value(path)
+    symbols = await get_symbols_by_value_v1(path)
     symbols = [s.replace("/", "") for s in symbols]
     # symbols = symbols[:10]
     file_paths = []
 
     try:
         async with aiohttp.ClientSession() as session:
-            for i in range(0, len(symbols), 5):
+            for i in range(
+                0,
+                len(symbols),
+                5,
+            ):
                 symbol_batch = symbols[i : i + 5]
                 for s in symbol_batch:
                     url = f"https://data.binance.vision/data/futures/um/daily/klines/{s}/1d/{s}-1d-{yesterday}.zip"
@@ -249,23 +337,53 @@ async def get_binance_data_daily_futures_symbol_value(path="_datasets/data/_data
                         async with session.get(url) as resp:
                             r = await resp.read()
                             z = zipfile.ZipFile(io.BytesIO(r))
-                            z.extractall("_datasets/_temp/binance_raw")
-                            file_paths.append(f"_datasets/_temp/binance_raw/{s}-1d-{yesterday}.csv")
+                            z.extractall("_project/datasets/_temp/binance_raw")
+                            file_paths.append(f"_project/datasets/_temp/binance_raw/{s}-1d-{yesterday}.csv")
                     except Exception as e:
-                        print(s, e, url)
-                        pass
+                        print(
+                            s,
+                            e,
+                            url,
+                        )
             await session.close()
 
         df = pd.DataFrame()
         for f in file_paths:
             symbol_name = f.split("/")[-1].split(".")[0].split("-")[0]
-            new_df = pd.read_csv(f, skiprows=1, header=None)  # skipping the first row
-            columns = ["time", "open", "high", "low", "close", "volume", "1", "2", "3", "4", "5", "6"]
+            new_df = pd.read_csv(
+                f,
+                skiprows=1,
+                header=None,
+            )  # skipping the first row
+            columns = [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+            ]
             new_df.columns = columns
-            new_df.drop(new_df.columns[6:], axis=1, inplace=True)
+            new_df.drop(
+                new_df.columns[6:],
+                axis=1,
+                inplace=True,
+            )
             new_df["symbol"] = symbol_name
 
-            df = pd.concat([df, new_df], ignore_index=True)
+            df = pd.concat(
+                [
+                    df,
+                    new_df,
+                ],
+                ignore_index=True,
+            )
 
         # drop na
         df = df.dropna()
@@ -273,14 +391,26 @@ async def get_binance_data_daily_futures_symbol_value(path="_datasets/data/_data
         df["volume"] = df["volume"].astype(float)
         df["close"] = df["close"].astype(float)
         df["value"] = df["volume"] * df["close"]
-        df = df[["symbol", "close", "volume", "value"]]
+        df = df[
+            [
+                "symbol",
+                "close",
+                "volume",
+                "value",
+            ]
+        ]
         df = df.sort_values(by=["value"], ascending=False)
         df.to_csv(path, index=False)
 
         for f in file_paths:
             os.remove(f)
 
-        df = df[["symbol", "value"]]
+        df = df[
+            [
+                "symbol",
+                "value",
+            ]
+        ]
         return df.to_dict("records")
 
     except Exception as e:
@@ -288,7 +418,7 @@ async def get_binance_data_daily_futures_symbol_value(path="_datasets/data/_data
 
 
 async def get_symbols_crypto_binance_delete():
-    symbols = pd.read_csv("_datasets/data/_data_symbols_crypto_delete.csv")
+    symbols = pd.read_csv("_project/datasets/data/_data_symbols_crypto_delete.csv")
     symbols = symbols["symbol"].tolist()
 
     symbols = [s.replace("/", "") for s in symbols]

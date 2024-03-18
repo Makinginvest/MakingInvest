@@ -17,11 +17,14 @@ class ZFormat {
   static num toPrecision(num number, int fractionDigits) {
     if (number.isNaN) return 0;
     num mod = pow(10, fractionDigits);
-    return ((number * mod).round() / mod);
+    num val = ((number * mod).round() / mod);
+    if (fractionDigits == 0) return val.round();
+    return val;
   }
 
   static String numToPercent(num number) {
-    return '${toPrecision(number * 100, 2)}%';
+    if (number.isNaN) return '0%';
+    return (number * 100).toStringAsFixed(2) + '%';
   }
 
   static dateTimeFormatStr(DateTime? dateTime) {
@@ -36,8 +39,8 @@ class ZFormat {
 
   static dateFormatSignal(DateTime? dateTime) {
     if (dateTime == null) return '';
-    // ÷convert date to local time zone
-    return DateFormat("MMM-dd, h:mm a").format(dateTime.toLocal());
+    if (dateTime.isUtc == false) dateTime = dateTime.toUtc();
+    return DateFormat("MMM-dd, h:mma").format(dateTime.toLocal());
   }
 
   static timeFormatStr(TimeOfDay? dateTime, BuildContext context) {

@@ -50,7 +50,7 @@ class ZButton extends StatelessWidget {
         padding: padding ?? null,
         elevation: elevation,
         color: isDisabled ? Colors.grey : getColor(context),
-        borderRadius: borderRadius ?? BorderRadius.circular(10),
+        borderRadius: borderRadius ?? BorderRadius.circular(8),
         borderRadiusColor: borderRadiusColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +62,7 @@ class ZButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
               ),
-            Text(text, style: textStyle ?? TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.w700)),
+            Text(text, style: textStyle ?? TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700, height: 0)),
           ],
         ),
         onTap: () {

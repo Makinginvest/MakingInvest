@@ -22,6 +22,8 @@ class AuthUser {
   num appBuildNumber;
   @JsonKey(defaultValue: false)
   bool isOnboarded;
+  @JsonKey(defaultValue: false)
+  bool isAdmin;
   //
   @JsonKey(defaultValue: [])
   List<String> notificationsDisabled;
@@ -68,6 +70,7 @@ class AuthUser {
         appVersion = '',
         appBuildNumber = 0,
         isOnboarded = false,
+        isAdmin = false,
         notificationsDisabled = [],
         notificationsRiskyEnabled = [],
         isAnonymous = true,

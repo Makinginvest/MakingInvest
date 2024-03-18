@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../models/symbols_tracker_aggr.dart';
+import '../models/symbols_tracker_aggr.dart';
 
 class ApiSymbolTrackerService {
   static Dio _dio = Dio();
@@ -14,7 +14,7 @@ class ApiSymbolTrackerService {
     if (jsonWebToken == null) return null;
 
     try {
-      var response = await _dio.get(apiUrl + '/symbols-trackers?jsonWebToken=${jsonWebToken}', options: Options(receiveTimeout: Duration(seconds: 5)));
+      var response = await _dio.get(apiUrl + '/v1/symbols-trackers?jsonWebToken=${jsonWebToken}', options: Options(receiveTimeout: Duration(seconds: 5)));
 
       return SymbolTrackerAggr.fromJson(response.data);
     } catch (e) {

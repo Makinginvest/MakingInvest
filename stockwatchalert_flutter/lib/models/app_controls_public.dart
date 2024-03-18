@@ -7,11 +7,11 @@ class AppControlsPublic {
   @JsonKey(defaultValue: '')
   String id;
   @JsonKey(defaultValue: '')
-  String apiWebSocketUrl;
+  String apiWebSocketUrlV1;
   @JsonKey(defaultValue: '')
   String frontendUrl;
   @JsonKey(defaultValue: '')
-  String apiUrl;
+  String apiUrlV1;
   @JsonKey(defaultValue: '')
   String adminUrl;
   @JsonKey(defaultValue: '')
@@ -43,8 +43,8 @@ class AppControlsPublic {
 
   AppControlsPublic()
       : id = '',
-        apiWebSocketUrl = '',
-        apiUrl = '',
+        apiWebSocketUrlV1 = '',
+        apiUrlV1 = '',
         frontendUrl = '',
         adminUrl = '',
         name = '',

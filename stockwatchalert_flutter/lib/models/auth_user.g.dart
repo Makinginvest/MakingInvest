@@ -20,6 +20,7 @@ AuthUser _$AuthUserFromJson(Map<String, dynamic> json) => AuthUser()
   ..appVersion = json['appVersion'] as String? ?? ''
   ..appBuildNumber = json['appBuildNumber'] as num? ?? 0
   ..isOnboarded = json['isOnboarded'] as bool? ?? false
+  ..isAdmin = json['isAdmin'] as bool? ?? false
   ..notificationsDisabled = (json['notificationsDisabled'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList() ??
@@ -61,6 +62,7 @@ Map<String, dynamic> _$AuthUserToJson(AuthUser instance) => <String, dynamic>{
       'appVersion': instance.appVersion,
       'appBuildNumber': instance.appBuildNumber,
       'isOnboarded': instance.isOnboarded,
+      'isAdmin': instance.isAdmin,
       'notificationsDisabled': instance.notificationsDisabled,
       'notificationsRiskyEnabled': instance.notificationsRiskyEnabled,
       'isAnonymous': instance.isAnonymous,

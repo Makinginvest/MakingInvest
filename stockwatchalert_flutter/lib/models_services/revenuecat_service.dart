@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:stockwatchalert/models/_parsers.dart';
 
-import '../../constants/app_env.dart';
-import '../../models/_parsers.dart';
+import '../constants/app_env.dart';
 
 class RevenueCatSevice {
   static String _androidKey = AppENV.REVENUECAT_ANDROID_KEY;
@@ -38,6 +38,8 @@ class RevenueCatSevice {
     try {
       List<Offering> offerings = await RevenueCatSevice.getOfferings();
       final _packages = offerings.map((e) => e.availablePackages).expand((element) => element).toList();
+      // sort packages by price
+      _packages.sort((a, b) => a.storeProduct.price.compareTo(b.storeProduct.price));
       return _packages;
     } catch (e) {
       return [];

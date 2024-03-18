@@ -1,2 +1,3 @@
-**__venv/
-**/__pycache__
+__venv/
+__pycache__/
+_project/data

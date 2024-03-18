@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stockwatchalert/models/news_aggr.dart';
+import 'package:stockwatchalert/models/signal_aggr_v1.dart';
 
-import '../../models/announcement_aggr.dart';
-import '../../models/app_controls_public.dart';
-import '../../models/news_aggr.dart';
-import '../../models/offering_aggr.dart';
-import '../../models/post_aggr.dart';
-import '../../models/signal_aggr.dart';
-import '../../models/support.dart';
-import '../../models/video_lesson_aggr.dart';
+import 'package:stockwatchalert/models/support.dart';
+
+import 'package:stockwatchalert/models/video_lesson_aggr.dart';
+
+import '../models/announcement_aggr.dart';
+import '../models/app_controls_public.dart';
+import '../models/post_aggr.dart';
 
 class FirestoreService {
   static Stream<AppControlsPublic> streamAppControlsPublic() {
@@ -32,11 +33,6 @@ class FirestoreService {
     return ref.map((doc) => VideoLessonAggr.fromJson({...?doc.data(), "id": doc.id}));
   }
 
-  static Stream<OfferingAggr> streamOfferingAggr() {
-    var ref = FirebaseFirestore.instance.collection('offeringsAggr').doc('offeringsAggr').snapshots();
-    return ref.map((doc) => OfferingAggr.fromJson({...?doc.data(), "id": doc.id}));
-  }
-
   static Stream<AnnouncementAggr> streamAnnoucementAggr() {
     var ref = FirebaseFirestore.instance.collection('announcementsAggr').doc('announcementsAggr').snapshots();
     return ref.map((doc) => AnnouncementAggr.fromJson({...?doc.data(), "id": doc.id}));
@@ -47,17 +43,12 @@ class FirestoreService {
     return ref.map((doc) => PostAggr.fromJson({...?doc.data(), "id": doc.id}));
   }
 
-  static Stream<List<SignalAggr>> streamSignalsXAggrOpen_v2() {
-    var ref = FirebaseFirestore.instance
-        .collection('signalsAggrOpen_V2')
-        .where('nameIsActive', isEqualTo: true)
-        .where('nameIsRisky', isEqualTo: false)
-        .orderBy('nameSort', descending: false)
-        .snapshots();
+  static Stream<List<SignalAggrV1>> streamSignalsXAggrOpenV1() {
+    var ref = FirebaseFirestore.instance.collection('signalsAggrOpenV1').where('nameIsActive', isEqualTo: true).orderBy('nameSort', descending: false).snapshots();
 
-    var x = ref.map((doc) => doc.docs.map((doc) => SignalAggr.fromJson({...doc.data(), "id": doc.id})).toList());
+    var x = ref.map((doc) => doc.docs.map((doc) => SignalAggrV1.fromJson({...doc.data(), "id": doc.id})).toList());
     x = x.map((list) => list.map((signalAggr) => signalAggr..signals.sort((a, b) => b.getEntryDateTimeUtc().compareTo(a.getEntryDateTimeUtc()))).toList());
-    return x.map((list) => list..sort((a, b) => a.sort.compareTo(b.sort)));
+    return x.map((list) => list..sort((a, b) => a.nameSort.compareTo(b.nameSort)));
   }
 
 /* -------------------------- NOTE SUPPORT SERVICE -------------------------- */

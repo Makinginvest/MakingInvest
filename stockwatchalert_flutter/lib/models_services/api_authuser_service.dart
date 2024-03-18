@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
-
-import '_hive_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ApiAuthUserService {
   static Dio _dio = Dio();
@@ -22,7 +20,7 @@ class ApiAuthUserService {
 
     try {
       await _dio.patch(
-        apiUrl + '/users?jsonWebToken=${jsonWebToken}',
+        apiUrl + '/v1/users?jsonWebToken=${jsonWebToken}',
         data: {...data},
         options: Options(receiveTimeout: Duration(seconds: 5), contentType: 'application/json'),
       );
@@ -35,16 +33,14 @@ class ApiAuthUserService {
     }
   }
 
-  static Future<bool?> deleteAccount() async {
+  static Future<bool?> deleteAccount(String apiUrl) async {
     try {
       User? fbUser = FirebaseAuth.instance.currentUser;
       String? jsonWebToken = await fbUser?.getIdToken();
       if (jsonWebToken == null) return null;
 
-      String apiUrl = await HiveHelper.getApiUrl();
-
       await _dio.patch(
-        apiUrl + '/users/userId/${fbUser?.uid}/delete-account',
+        apiUrl + '/v1/users/userId/${fbUser?.uid}/delete-account',
         data: {'jsonWebToken': jsonWebToken},
         options: Options(receiveTimeout: Duration(seconds: 5), contentType: 'application/json'),
       );
@@ -62,7 +58,7 @@ class ApiAuthUserService {
   static Future<bool?> deleteAccountFbUserJsonWebToken(User fbUser, String jsonWebToken, String apiUrl) async {
     try {
       await _dio.delete(
-        apiUrl + '/users/userId/${fbUser.uid}/delete-account?jsonWebToken=$jsonWebToken',
+        apiUrl + '/v1/users/userId/${fbUser.uid}/delete-account?jsonWebToken=$jsonWebToken',
         data: {'jsonWebToken': jsonWebToken},
         options: Options(receiveTimeout: Duration(seconds: 5), contentType: 'application/json'),
       );

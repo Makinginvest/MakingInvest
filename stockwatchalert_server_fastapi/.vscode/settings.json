@@ -1,7 +1,10 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
     },
-    "python.formatting.provider": "none",
-    "python.terminal.activateEnvironment": true
+    "python.terminal.activateEnvironment": true,
+    "python.defaultInterpreterPath": "${workspaceFolder}/__venv/bin/python",
+    "todo-tree.tree.showBadges": false,
+    "todo-tree.tree.scanMode": "workspace only",
 }

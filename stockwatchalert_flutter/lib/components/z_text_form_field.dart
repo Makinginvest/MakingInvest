@@ -90,7 +90,7 @@ class _ZTextFormFieldState extends State<ZTextFormField> {
   @override
   Widget build(BuildContext context) {
     final isLightTheme = Theme.of(context).brightness == Brightness.light;
-    BorderRadius borderRadius = BorderRadius.circular(AppSizes.textFormFieldRadius);
+    BorderRadius borderRadius = BorderRadius.circular(AppSIZES.textFormFieldRadius);
 
     Color disabledBorderColor = isLightTheme ? Color(0xFFE6E7EA) : Color(0xFFE6E7EA);
     Color enabledBorderColor = isLightTheme ? Colors.black12 : Colors.white10;

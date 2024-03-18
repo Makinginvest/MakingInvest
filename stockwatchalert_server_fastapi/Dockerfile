@@ -1,5 +1,5 @@
 # python smallest image
-FROM python:3.9-bullseye
+FROM python:3.10.13-slim-bullseye
 
 WORKDIR /usr/src/app
 
@@ -10,12 +10,10 @@ RUN /usr/local/bin/python -m pip install --upgrade pip
 
 COPY .env ./
 COPY ./app ./app
-COPY ./_datasets ./_datasets
-COPY ./_deprecated ./_deprecated
-COPY ./_log_config ./_log_config
-COPY ./utils ./utils
-
-COPY ./_signals ./_signals
+COPY ./_project/datasets ./_project/datasets
+COPY ./_project/data_results ./_project/data_results
+COPY ./_project/log_config ./_project/log_config
+COPY ./_project/signals ./_project/signals
 
 ARG WORKERS=8
 ARG PRODUCTION=True

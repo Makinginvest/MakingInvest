@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:stockwatchalert/constants/app_colors.dart';
 
-import '../constants/app_colors.dart';
 import '_parsers.dart';
 
 part 'market_analysis.g.dart';

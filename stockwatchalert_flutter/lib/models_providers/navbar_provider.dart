@@ -6,6 +6,7 @@ class NavbarProvider with ChangeNotifier {
 
   set selectedPageIndex(int index) {
     _selectedPageIndex = index;
+    print('selectedPageIndex: $_selectedPageIndex');
     notifyListeners();
   }
 }

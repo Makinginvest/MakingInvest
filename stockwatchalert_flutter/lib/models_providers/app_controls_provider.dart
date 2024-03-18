@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:signalbyt/models/market_activity_aggr.dart';
-import 'package:signalbyt/models/signal_aggr.dart';
-import 'package:signalbyt/models/symbols_tracker_aggr.dart';
-import 'package:signalbyt/models/ws_symbol.dart';
+import 'package:stockwatchalert/models/auth_user.dart';
+import 'package:stockwatchalert/models/signal_aggr_v1.dart';
+import 'package:stockwatchalert/models/symbols_tracker_aggr.dart';
+import 'package:stockwatchalert/models/ws_symbol.dart';
 
 import '../models/app_controls_public.dart';
 import '../models/market_analysis.dart';
@@ -18,21 +18,23 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class AppControlsProvider with ChangeNotifier {
   /* -------------------------------- NOTE INIT ------------------------------- */
-  DateTime? dtWebsocketUpdated;
-  String? authUserId;
-  String? apiWebSocketUrl;
-  String? jsonWebToken;
-  int websockerTimerIntervalSecs = 30;
-  Timer? websockerTimer;
+  DateTime? _dtWebsocketUpdated;
+  String? _authUserId;
+  String? _apiWebSocketUrlV1;
+  String? _jsonWebToken;
+  int _websocketTimerIntervalSecs = 30;
+  Timer? _websocketTimer;
 
   AuthProvider? _authProvider;
+  AuthUser? _authUser;
   AuthProvider? get authProvider => _authProvider;
   set authProvider(AuthProvider? authProvider) {
     _authProvider = authProvider;
-    bool rerun = authUserId == null || authUserId != _authProvider?.authUser?.id;
+    bool rerun = _authUserId == null || _authUserId != _authProvider?.authUser?.id;
 
     if (_authProvider?.authUser != null && rerun) {
-      authUserId = _authProvider?.authUser?.id ?? '';
+      _authUserId = _authProvider?.authUser?.id ?? '';
+      _authUser = _authProvider?.authUser;
 
       streamAppControls();
       startWebsockerTime();
@@ -40,8 +42,8 @@ class AppControlsProvider with ChangeNotifier {
     }
 
     if (_authProvider?.authUser == null) {
-      authUserId = null;
-      websockerTimer?.cancel();
+      _authUserId = null;
+      _websocketTimer?.cancel();
 
       disconnectSocketIo();
       cancleStreamAppControls();
@@ -59,7 +61,7 @@ class AppControlsProvider with ChangeNotifier {
     _streamSubscriptionAppControls = res.listen((event) async {
       _appControls = event;
 
-      await HiveHelper.setApiUrl(_appControls.apiUrl);
+      await HiveHelper.setApiUrl(_appControls.apiUrlV1);
 
       connectSocketIo();
       notifyListeners();
@@ -75,8 +77,8 @@ class AppControlsProvider with ChangeNotifier {
     FirebaseAuth.instance.idTokenChanges().listen((event) async {
       await FirebaseAuth.instance.currentUser?.reload();
       var newJsonWebToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-      if (newJsonWebToken != jsonWebToken) {
-        jsonWebToken = newJsonWebToken;
+      if (newJsonWebToken != _jsonWebToken) {
+        _jsonWebToken = newJsonWebToken;
         disconnectSocketIo();
         connectSocketIo();
       }
@@ -89,16 +91,16 @@ class AppControlsProvider with ChangeNotifier {
   }
 
   void startWebsockerTime() {
-    websockerTimer = Timer.periodic(Duration(seconds: websockerTimerIntervalSecs), (timer) {
+    _websocketTimer = Timer.periodic(Duration(seconds: _websocketTimerIntervalSecs), (timer) {
       websocketReconnect();
     });
   }
 
   void websocketReconnect() {
     var dtNow = DateTime.now();
-    var dtWebsocketUpdated = this.dtWebsocketUpdated ?? dtNow;
+    var dtWebsocketUpdated = this._dtWebsocketUpdated ?? dtNow;
 
-    bool dtCheck = (dtWebsocketUpdated == dtNow) || dtNow.difference(dtWebsocketUpdated).inSeconds > websockerTimerIntervalSecs;
+    bool dtCheck = (dtWebsocketUpdated == dtNow) || dtNow.difference(dtWebsocketUpdated).inSeconds > _websocketTimerIntervalSecs;
     bool socketCheck = socket?.disconnected == true || socket == null;
 
     if (dtCheck && socketCheck) {
@@ -118,24 +120,24 @@ class AppControlsProvider with ChangeNotifier {
     String appVersion = packageInfo.version;
     num appBuildNumber = int.tryParse(packageInfo.buildNumber) ?? 0;
 
-    if (appControls.apiWebSocketUrl == '') {
+    if (appControls.apiWebSocketUrlV1 == '') {
       socket?.close();
       socket?.disconnect();
       return;
     }
 
-    if (appControls.apiWebSocketUrl == apiWebSocketUrl && socket?.connected == true && newJsonWebToken == jsonWebToken) return;
+    if (appControls.apiWebSocketUrlV1 == _apiWebSocketUrlV1 && socket?.connected == true && newJsonWebToken == _jsonWebToken) return;
 
-    apiWebSocketUrl = appControls.apiWebSocketUrl;
-    jsonWebToken = newJsonWebToken;
+    _apiWebSocketUrlV1 = appControls.apiWebSocketUrlV1;
+    _jsonWebToken = newJsonWebToken;
 
-    socket = IO.io(apiWebSocketUrl, <String, dynamic>{
+    socket = IO.io(_apiWebSocketUrlV1, <String, dynamic>{
       'transports': ['websocket'],
-      'path': '/socketio/socket.io',
+      'path': '/socketio_v1/socket.io',
       'autoConnect': false,
       'forceNew': true,
       'extraHeaders': {
-        'jsonWebToken': jsonWebToken,
+        'jsonWebToken': _jsonWebToken,
         'userId': fbUser.uid,
         'appVersion': appVersion,
         'appBuildNumber': appBuildNumber,
@@ -153,40 +155,60 @@ class AppControlsProvider with ChangeNotifier {
 
     socket?.on('prices_forex', (message) {
       handlePriceData(message: message, type: 'forex');
-      dtWebsocketUpdated = DateTime.now();
+      _dtWebsocketUpdated = DateTime.now();
     });
 
     socket?.on('prices_stocks', (message) {
       handlePriceData(message: message, type: 'stocks');
-      dtWebsocketUpdated = DateTime.now();
+      _dtWebsocketUpdated = DateTime.now();
     });
 
     socket?.on('market_analysis', (message) {
       handleMarketAnalysis(message['data']);
-      dtWebsocketUpdated = DateTime.now();
+      _dtWebsocketUpdated = DateTime.now();
     });
 
     socket?.on('news_aggr', (message) {
       handleNewsAggr(message['data']);
-      dtWebsocketUpdated = DateTime.now();
+      _dtWebsocketUpdated = DateTime.now();
     });
 
-    socket?.on('market_activities_aggr', (message) {
-      handleMarketActivityAggr(message['data']);
-      dtWebsocketUpdated = DateTime.now();
+    socket?.on('signal_aggr_open_v1', (message) {
+      handleSignalsXAggrOpenV1(message['data']);
+      _dtWebsocketUpdated = DateTime.now();
     });
   }
 
   void cancleAllStreams() {
     disconnectSocketIo();
     notifyListeners();
-    authUserId = null;
+    _authUserId = null;
   }
 
   void disconnectSocketIo() {
     socket?.close();
     socket?.disconnect();
     socket = null;
+  }
+
+  /* -------------------------- NOTE OPEN SIGNALS V1 -------------------------- */
+  List<SignalAggrV1> _signalAggrsOpenV1 = [];
+  List<SignalAggrV1> get signalAggrsOpenV1 => _signalAggrsOpenV1;
+  StreamSubscription<List<SignalAggrV1>>? _streamSubscriptionSignalAggrsOpenV1;
+
+  void handleSignalsXAggrOpenV1(data) {
+    if (data is String) data = json.decode(data);
+    List<SignalAggrV1> signalAggrs = data.map<SignalAggrV1>((e) => SignalAggrV1.fromJson(e)).toList();
+    bool isAdmin = _authUser?.isAdmin ?? false;
+    if (!isAdmin) signalAggrs.removeWhere((e) => e.nameIsAdminOnly == true);
+    _signalAggrsOpenV1 = signalAggrs;
+
+    print('handleSignalsXAggrOpenV1 ${_signalAggrsOpenV1.length}');
+    notifyListeners();
+  }
+
+  void cancleStreamSignalsAggrOpenV1() {
+    _streamSubscriptionSignalAggrsOpenV1?.cancel();
   }
 
   /* -------------------------- NOTE MARKET ANALYSIS -------------------------- */
@@ -213,41 +235,11 @@ class AppControlsProvider with ChangeNotifier {
   List<News> get newsForex => _newsForex;
 
   void handleNewsAggr(data) {
-    if (data is String) {
-      data = json.decode(data);
-    }
-
+    if (data is String) data = json.decode(data);
     _newsAggr = NewsAggr.fromJson(data);
     _newsCrypto = _newsAggr.dataCrypto;
     _newsStocks = _newsAggr.dataStocks;
     _newsForex = _newsAggr.dataForex;
-
-    notifyListeners();
-  }
-
-  /* -------------------------------- NOTE NEWS ------------------------------- */
-  MarketActivityAggr _marketActivityAggr = MarketActivityAggr();
-  MarketActivityAggr get marketActivityAggr => _marketActivityAggr;
-
-  List<MarketActivity> _gainers = [];
-  List<MarketActivity> get gainers => _gainers;
-
-  List<MarketActivity> _losers = [];
-  List<MarketActivity> get losers => _losers;
-
-  List<MarketActivity> _actives = [];
-  List<MarketActivity> get actives => _actives;
-
-  void handleMarketActivityAggr(data) {
-    if (data is String) {
-      data = json.decode(data);
-      print('handleMarketActivityAggr ${data}');
-    }
-
-    _marketActivityAggr = MarketActivityAggr.fromJson(data);
-    _gainers = _marketActivityAggr.gainers;
-    _losers = _marketActivityAggr.losers;
-    _actives = _marketActivityAggr.actives;
 
     notifyListeners();
   }
@@ -273,20 +265,7 @@ class AppControlsProvider with ChangeNotifier {
     }
   }
 
-  num getWSSymbolPriceSignal(Signal signal) {
-    List<WSSymbol> symbols = [];
-    if (signal.market.toLowerCase() == 'crypto') symbols = wsSymbolsCrypto.map((e) => e).toList();
-    if (signal.market.toLowerCase() == 'forex') symbols = wsSymbolsForex.map((e) => e).toList();
-    if (signal.market.toLowerCase() == 'stocks') symbols = wsSymbolsStocks.map((e) => e).toList();
-
-    if (symbols.map((e) => e.symbol).toList().contains(signal.symbol)) {
-      return symbols[symbols.map((e) => e.symbol).toList().indexOf(signal.symbol)].price;
-    }
-
-    return signal.entryPrice;
-  }
-
-  num getLivelPriceSignalV1(Signal signal) {
+  num getLivelPriceSignalV1(SignalV1 signal) {
     List<WSSymbol> symbols = [];
     if (signal.market.toLowerCase() == 'crypto') symbols = wsSymbolsCrypto.map((e) => e).toList();
     if (signal.market.toLowerCase() == 'forex') symbols = wsSymbolsForex.map((e) => e).toList();

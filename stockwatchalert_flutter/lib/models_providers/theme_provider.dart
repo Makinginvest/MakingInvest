@@ -19,14 +19,14 @@ class ThemeProvider with ChangeNotifier {
 }
 
 class Themes {
-  static ThemeData light() => _baseTheme(ThemeData.light());
-  static ThemeData dark() => _baseTheme(ThemeData.dark());
+  static ThemeData light() => _baseTheme(ThemeData.light(useMaterial3: true));
+  static ThemeData dark() => _baseTheme(ThemeData.dark(useMaterial3: true));
 
   static ThemeData _baseTheme(ThemeData themeData) {
     bool isLightTheme = themeData.brightness == Brightness.light;
     BorderRadius borderRadius = BorderRadius.circular(3);
 
-    Color scaffoldBackgroundColor = isLightTheme ? Color(0xFFFAFAFC) : Color(0xFF181A20);
+    Color scaffoldBackgroundColor = isLightTheme ? Color(0xFFFAFAFC) : AppColors.dark1;
     Color textColor = isLightTheme ? Colors.black : Colors.white;
 
     Color disabledBorderColor = isLightTheme ? Color(0xFFE6E7EA) : Colors.black12;
@@ -45,14 +45,13 @@ class Themes {
         themeData.textTheme.copyWith(bodyMedium: themeData.textTheme.bodyMedium?.copyWith(fontSize: 14)),
       ).apply(bodyColor: textColor, displayColor: textColor),
       appBarTheme: AppBarTheme(
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        toolbarHeight: 46,
-        backgroundColor: scaffoldBackgroundColor,
-        actionsIconTheme: IconThemeData(color: textColor),
-        iconTheme: IconThemeData(color: textColor),
-        titleTextStyle: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w600),
-      ),
+          elevation: 0,
+          centerTitle: true,
+          toolbarHeight: 52,
+          backgroundColor: scaffoldBackgroundColor,
+          iconTheme: IconThemeData(color: textColor),
+          titleTextStyle: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.w600),
+          scrolledUnderElevation: 0),
       inputDecorationTheme: InputDecorationTheme(
         fillColor: isLightTheme ? Colors.grey.shade100 : Colors.white10,
         suffixStyle: TextStyle(color: isLightTheme ? Colors.black54 : Colors.white54),
@@ -94,8 +93,6 @@ class Themes {
 
     Color systemNavigationBarColorDark = Color(0xFF181A20);
     Color systemNavigationBarColorLight = Color(0xFFFAFAFC);
-    // Color systemNavigationBarColorDark = Color(0xFF2A2C32);
-    // Color systemNavigationBarColorLight = Colors.grey.shade300;
 
     if (isThemeModeLight) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

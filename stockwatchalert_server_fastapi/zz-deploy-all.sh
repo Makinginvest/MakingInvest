@@ -1,9 +1,8 @@
-echo 'deploying server all'
+echo 'Deploying Server All'
 
 bash zz-deploy-api.sh
-bash zz-deploy-data-ws.sh
-bash zz-deploy-data.sh
-bash zz-deploy-engines-all.sh
-bash zz-deploy-engines-main.sh
+bash zz-deploy-api-websocket.sh
+bash zz-deploy-engines-driver.sh
+bash zz-deploy-engines-worker.sh
 
-echo 'deployed server all'
+echo 'Deployed Server All'

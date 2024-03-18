@@ -1,1 +1,1 @@
-echo 'Deploying Server All'
+echo "Holder for all scripts"

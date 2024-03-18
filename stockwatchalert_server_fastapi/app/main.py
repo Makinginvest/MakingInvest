@@ -1,38 +1,39 @@
-import asyncio
 import os
 from logging.config import dictConfig
+import warnings
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-import app.a_cronjobs.cronjobs_data_general
-import app.a_cronjobs.cronjobs_signals_crypto
-import app.a_cronjobs.cronjobs_signals_forex
-import app.a_cronjobs.cronjobs_signals_stocks
-import app.a_firebase.firebase
-from app.a_firebase.firebase import ensure_firebase_app
-from _log_config.dict_config import log_config
-
-
-from app.a_database_data.db_connect_data import close_mongodb_connection, connect_to_mongodb
+import app._firebase.firebase
+from app._firebase.firebase import ensure_firebase_app
+from _project.log_config.dict_config import log_config
+from app._database.db_connect_data import close_mongodb_connection, connect_to_mongodb
 from app.helpers.data.symbols_crypto import update_all_symbols_from_data_db_mongodb_aggr
-from app.routers.v0.api.v0_route_analysis import v0_router_analysis
-from app.routers.v0.api.v0_route_indexes import v0_router_indexes
-from app.routers.v0.api.v0_route_news import v0_router_news
-from app.routers.v0.api.v0_route_signals_results import v0_router_signals_results
-from app.routers.v0.api.v0_route_symbols_rank import router_symbols_rank_v0
-from app.routers.v0.api.v0_route_symbols import router_symbols_v0
-from app.routers.v0.api.v0_route_tracker import router_tracker_v0
-from app.routers.v0.api.v0_route_users import router_users_v0
-from app.routers.v0.signals.v0_route_signals_live import router_signals_live_v0
-from app.routers.v0.websockets.v0_route_socketio import sio_app
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
+
+# ---------------------------------- V1 CRON --------------------------------- #
+import app._cronjobs.cronjobs_signals_v1
+
+# --------------------------------- V1 ROUTES -------------------------------- #
+from app.routers.v1.api.route_analysis_v1 import router_analysis_v1
+from app.routers.v1.api.route_indexes_v1 import router_indexes_v1
+from app.routers.v1.api.route_news_v1 import router_news_v1
+from app.routers.v1.api.route_symbols_v1 import router_symbols_v1
+from app.routers.v1.api.route_tracker_v1 import router_tracker_v1
+from app.routers.v1.api.route_users_v1 import router_users_v1
+from app.routers.v1.websockets.route_socketio_v1 import sio_app_v1
+from app.routers.v1.signals.route_backtest_data_v1 import router_backtest_data_v1
+from app.routers.v1.signals.route_signals_v1 import router_signals_v1
+from app.routers.v1.api.route_signals_results_v1 import router_signals_results_v1
 
 dictConfig(log_config)
 
 load_dotenv()
-is_production = os.getenv("PRODUCTION")
+is_production = os.getenv("PRODUCTION", "False")
 is_allow_cron = os.getenv("ALLOW_CRON")
 is_data_mode = os.getenv("DATA_MODE")
 is_websocket_mode = os.getenv("WEBSOCKET_MODE")
@@ -44,15 +45,15 @@ if is_production == "True" or is_data_mode == "True" or is_websocket_mode == "Tr
 
 app = FastAPI() if show_docs else FastAPI(docs_url=None, redoc_url=None)
 
-
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 
 if is_websocket_mode == "True":
-    app.mount("/socketio", sio_app)
+    app.mount("/socketio_v1", sio_app_v1)
 
-app.mount("/socketio", sio_app)
+if is_production != "True":
+    app.mount("/socketio_v1", sio_app_v1)
 
 
 @app.on_event("startup")
@@ -72,14 +73,14 @@ def read_root():
     return {" Hello": "World"}
 
 
-app.include_router(v0_router_analysis)
-app.include_router(v0_router_indexes)
-app.include_router(v0_router_news)
-app.include_router(router_signals_live_v0)
-app.include_router(v0_router_signals_results)
-app.include_router(router_symbols_rank_v0)
-app.include_router(router_symbols_v0)
-app.include_router(router_tracker_v0)
-app.include_router(router_users_v0)
+# ------------------------------------ V1 ------------------------------------ #
+app.include_router(router_analysis_v1)
+app.include_router(router_indexes_v1)
+app.include_router(router_news_v1)
+app.include_router(router_symbols_v1)
+app.include_router(router_tracker_v1)
+app.include_router(router_users_v1)
 
-#
+app.include_router(router_backtest_data_v1)
+app.include_router(router_signals_v1)
+app.include_router(router_signals_results_v1)

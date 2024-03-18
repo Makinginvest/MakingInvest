@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stockwatchalert/components/z_card.dart';
+import 'package:stockwatchalert/components/z_image_display.dart';
 
 import '../constants/app_colors.dart';
 import '../models/news_aggr.dart';
 import '../pages/_app/render_html_url_page.dart';
 import '../utils/z_format.dart';
-import 'z_card.dart';
-import 'z_image_display.dart';
 
 class ZNewsCard extends StatelessWidget {
   const ZNewsCard({Key? key, required this.news}) : super(key: key);

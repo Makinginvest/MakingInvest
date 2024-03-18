@@ -1,4 +1,4 @@
-class AppSizes {
+class AppSIZES {
   static double xsRadius = 8;
   static double smRadius = 12;
   static double mdRadius = 16;
@@ -12,6 +12,6 @@ class AppSizes {
   static double buttonHeight = 44;
   static double buttonRadius = 16;
 
-  static double cardRadius = 16;
+  static double cardRadius = 8;
   static double cardBorderWidth = 1.25;
 }

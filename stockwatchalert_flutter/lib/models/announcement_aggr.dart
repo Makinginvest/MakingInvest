@@ -53,10 +53,4 @@ class Announcement {
   Map<String, dynamic> toJson() => _$AnnouncementToJson(this)
     ..remove('id')
     ..remove('createdDateTime');
-
-  // functions
-  String getBodyPreview() {
-    if (body.length > 400) return body.substring(0, 400) + '...';
-    return body;
-  }
 }

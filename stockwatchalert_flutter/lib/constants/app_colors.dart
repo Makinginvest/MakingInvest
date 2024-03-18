@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class AppColors {
   static Color yellow = Color(0xFFF3D10A);
   static Color red = Color(0xFFF75555);
-  // static Color green = Color(0xFF0CBF89);
-  static Color green = Color(0xFF35BA45);
+  static Color green = Color(0xFF17CE92);
   static Color pink = Color(0xFFEA1E61);
   static Color blue = Color(0xFF246CF9);
+  // static Color blue = Color(0xFF0A13FF);
   static Color purple = Color(0xFF584CF4);
   static Color gray = Color(0xFF424242);
   static Color orange = Color(0xFFF89300);

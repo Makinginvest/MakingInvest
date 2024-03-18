@@ -1,20 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:stockwatchalert/models/auth_user.dart';
+import 'package:stockwatchalert/models/post_aggr.dart';
+import 'package:stockwatchalert/models/signal_aggr_v1.dart';
+import 'package:stockwatchalert/models/symbols_tracker_aggr.dart';
+import 'package:stockwatchalert/models/video_lesson_aggr.dart';
+import 'package:stockwatchalert/models_services/firestore_service.dart';
 
 import '../models/announcement_aggr.dart';
-import '../models/auth_user.dart';
-import '../models/news_wordpress.dart';
-import '../models/offering_aggr.dart';
-import '../models/post_aggr.dart';
-import '../models/signal_aggr.dart';
-import '../models/symbols_tracker_aggr.dart';
-import '../models/video_lesson_aggr.dart';
-import '../models_services/_hive_helper.dart';
-import '../models_services/api_news_service.dart';
 import '../models_services/api_tracker_service.dart';
-import '../models_services/firebase_auth_service.dart';
-import '../models_services/firestore_service.dart';
+import '../models_services/_hive_helper.dart';
 import 'auth_provider.dart';
 
 class AppProvider with ChangeNotifier {
@@ -29,13 +25,9 @@ class AppProvider with ChangeNotifier {
     bool rerun = authUserId == null || authUserId == '' || authUserId != _authProvider?.authUser?.id;
 
     if (_authProvider?.authUser != null && rerun) {
-      streamSignalsXAggrOpen();
+      streamSignalsXAggrOpenV1();
       getSymbolTrackerAggr();
       streamAnnoucementAggr();
-      streamOfferingAggr();
-      getNewsWordpressInit();
-      streamPosts();
-      streamVideoLessonsAggr();
 
       notifyListeners();
       authUserId = _authProvider?.authUser?.id ?? '';
@@ -43,13 +35,9 @@ class AppProvider with ChangeNotifier {
     }
 
     if (_authProvider?.authUser == null) {
-      cancleStreamSignalsAggrOpen();
       cancleStreamPost();
       cancleStreamVideoLessonsAggr();
       cancleStreamAnnoucementAggr();
-      cancleStreamOfferingAggr();
-      cancleStreamPost();
-      cancleStreamVideoLessonsAggr();
 
       notifyListeners();
       authUserId = null;
@@ -65,7 +53,6 @@ class AppProvider with ChangeNotifier {
     cancleStreamPost();
     cancleStreamVideoLessonsAggr();
     cancleStreamAnnoucementAggr();
-    cancleStreamSignalsAggrOpen();
 
     notifyListeners();
     authUserId = null;
@@ -131,77 +118,21 @@ class AppProvider with ChangeNotifier {
     _streamSubscriptionAnnouncementAggr?.cancel();
   }
 
-  toggleSignalToFavorites(Signal s) async {
-    String apiUrl = await HiveHelper.getApiUrl();
-    if (authUser == null || apiUrl == '') return;
-    FirebaseAuthService.updateFavorite(id: s.id, user: authUser!, apiUrl: apiUrl);
-  }
+  /* -------------------------- NOTE OPEN SIGNALS V1 -------------------------- */
+  List<SignalAggrV1> _signalAggrsOpenV1 = [];
+  List<SignalAggrV1> get signalAggrsOpenV1 => _signalAggrsOpenV1;
+  StreamSubscription<List<SignalAggrV1>>? _streamSubscriptionSignalAggrsOpenV1;
 
-  /* ------------------------------ OFFETING Aggr ----------------------------- */
-  OfferingAggr _offeringAggr = OfferingAggr();
-  OfferingAggr get offeringAggr => _offeringAggr;
-  StreamSubscription<OfferingAggr>? _streamSubscriptionOfferingAggr;
-
-  void streamOfferingAggr() {
-    var res = FirestoreService.streamOfferingAggr();
-    _streamSubscriptionOfferingAggr = res.listen((event) {
-      _offeringAggr = event;
+  void streamSignalsXAggrOpenV1() {
+    var res = FirestoreService.streamSignalsXAggrOpenV1();
+    _streamSubscriptionSignalAggrsOpenV1 = res.listen((event) {
+      _signalAggrsOpenV1 = event;
       notifyListeners();
     });
   }
 
-  void cancleStreamOfferingAggr() {
-    _streamSubscriptionOfferingAggr?.cancel();
-  }
-
-  /* --------------------------------  New Wordpress------------------------------- */
-  List<NewsWordpress> _newsWordpress = [];
-  List<NewsWordpress> get newsWordpress => _newsWordpress;
-  DateTime? _dtNewsWordpressUpdated;
-
-  void getNewsWordpressInit() async {
-    _dtNewsWordpressUpdated = DateTime.now();
-
-    String apiUrl = await HiveHelper.getApiUrl();
-    _newsWordpress = await ApiNewsWordpressService.getNews(apiUrl);
-    notifyListeners();
-  }
-
-  void getNewsWordpress() async {
-    if (_dtNewsWordpressUpdated == null) return;
-    DateTime dtNow = DateTime.now();
-    Duration diff = dtNow.difference(_dtNewsWordpressUpdated!);
-    if (diff.inMinutes < 15 && _newsWordpress.isNotEmpty) return;
-
-    String apiUrl = await HiveHelper.getApiUrl();
-    _newsWordpress = await ApiNewsWordpressService.getNews(apiUrl);
-    _dtNewsWordpressUpdated = DateTime.now();
-    notifyListeners();
-  }
-
-/* ---------------------------- NOTE OPEN SIGNALS --------------------------- */
-  String _selectedSignalAggrName = '';
-  String get selectedSignalAggrName => _selectedSignalAggrName;
-
-  set selectedSignalAggrName(String selectedSignalAggrName) {
-    _selectedSignalAggrName = selectedSignalAggrName;
-    notifyListeners();
-  }
-
-  List<SignalAggr> _signalAggrsOpen = [];
-  List<SignalAggr> get signalAggrsOpen => _signalAggrsOpen;
-  StreamSubscription<List<SignalAggr>>? _streamSubscriptionSignalAggrsOpen;
-
-  void streamSignalsXAggrOpen() {
-    var res = FirestoreService.streamSignalsXAggrOpen_v2();
-    _streamSubscriptionSignalAggrsOpen = res.listen((event) {
-      _signalAggrsOpen = event;
-      notifyListeners();
-    });
-  }
-
-  void cancleStreamSignalsAggrOpen() {
-    _streamSubscriptionSignalAggrsOpen?.cancel();
+  void cancleStreamSignalsAggrOpenV1() {
+    _streamSubscriptionSignalAggrsOpenV1?.cancel();
   }
 
   /* ---------------------------- NOTE SYMBOLS TRACKER --------------------------- */

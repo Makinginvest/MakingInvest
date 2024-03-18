@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:signalbyt/pages/subsciption/subscription_page.dart';
+import 'package:stockwatchalert/pages/subsciption/subscription_page.dart';
 
 import '../../components/z_button.dart';
 import '../../constants/app_colors.dart';
@@ -18,24 +18,24 @@ class _OnboardingPage1State extends State<OnboardingPage1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/logo-with-text.png', width: 180),
+          Image.asset('assets/images/logo.png', width: 80),
           SizedBox(height: 16),
           Text(
-            'Your Gateway to Trading Excellence',
+            'Welcome to StockWatchAlert! \nYour gateway to smart investing starts here.',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             textAlign: TextAlign.center,
           ),
           Container(
             transform: Matrix4.rotationZ(-0.05),
             padding: EdgeInsets.fromLTRB(40, 8, 40, 16),
-            margin: EdgeInsets.fromLTRB(0, 30, 0, 20),
+            margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
             decoration: BoxDecoration(color: AppColors.green, borderRadius: BorderRadius.circular(0)),
             child: Container(
               transform: Matrix4.rotationZ(0.05),
@@ -47,34 +47,20 @@ class _OnboardingPage1State extends State<OnboardingPage1> {
             ),
           ),
           Text(
-            'Get the Edge with Real-Time Insights',
+            'Dive in and set the stage for your financial growth.',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             textAlign: TextAlign.center,
           ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 32),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset('assets/images/feathers-left.png', width: 50),
-                Column(
-                  children: [
-                    Text('Best', style: TextStyle(color: AppColors.green, fontSize: 18, fontWeight: FontWeight.w900, height: 1.2)),
-                    Text('Finance App', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, height: 1.2)),
-                    SizedBox(height: 8),
-                    SvgPicture.asset('assets/svg/yellow-5-stars.svg', height: 20, width: 20),
-                  ],
-                ),
-                Image.asset('assets/images/feathers-right.png', width: 50),
-              ],
-            ),
-          ),
+          SizedBox(height: 16),
+          SvgPicture.asset('assets/svg/onboarding1.svg', height: 180, width: 200),
+          SizedBox(height: 16),
           GestureDetector(
             onTap: () => Get.to(() => OnboardingPage2()),
             child: Stack(
               alignment: AlignmentDirectional.centerEnd,
               children: [
                 ZButton(
+                  borderRadius: BorderRadius.circular(20),
                   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   text: 'Start',
                   backgroundColor: AppColors.green,
@@ -101,26 +87,16 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text.rich(
-            textAlign: TextAlign.center,
-            TextSpan(
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, height: 1.2),
-              children: [
-                TextSpan(text: 'Be the '),
-                TextSpan(
-                  text: 'Master',
-                  style: TextStyle(color: AppColors.green),
-                ),
-                TextSpan(text: ' of your \ntrading')
-              ],
-            ),
+          Image.asset(
+            'assets/images/bull_bear.png',
+            height: 160,
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
@@ -129,14 +105,12 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildSectionVertical(
-                  title: 'Real-Time \nTrading Signals',
-                  subtitle: 'Market trend insights for \nForex, crypto, and stocks.',
-                  imagePath: 'assets/svg/alarm-clock.svg',
+                  title: '"Real-Time Alerts',
+                  subtitle: 'Unlock the power of real-time signals and live news to make informed decisions on the go.',
                 ),
                 _buildSectionVertical(
-                  title: 'Comprehensive \nLearning Section',
-                  subtitle: 'Trading education through \nvideos and guides.',
-                  imagePath: 'assets/svg/graduating-hat.svg',
+                  title: 'Market Insights',
+                  subtitle: 'Gain access to deep market insights and analysis, tailored to your trading strategy.',
                 ),
               ],
             ),
@@ -147,14 +121,12 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildSectionVertical(
-                  title: 'Crypto ICO \nAnalyses',
-                  subtitle: 'In-depth reviews of \ncryptocurrency IPOs',
-                  imagePath: 'assets/svg/analysis.svg',
+                  title: 'Strategic Tools',
+                  subtitle: 'Navigate the markets with confidence, using our cutting-edge tools for a competitive edge.',
                 ),
                 _buildSectionVertical(
-                  title: 'Economic \nUpdates',
-                  subtitle: 'Frequent briefings on \neconomic developments.',
-                  imagePath: 'assets/svg/news.svg',
+                  title: 'Strategic Tools',
+                  subtitle: 'Empower your trading with actionable intelligence and the latest market trends.',
                 ),
               ],
             ),
@@ -162,8 +134,8 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
             child: _buildSectionHosizontal(
-              title: '20+ AI Trading Signals Every Day',
-              subtitle: 'Your earnings will shock you!',
+              title: '10+ AI Trading Signals Every Day',
+              subtitle: 'Never miss a trading opportunity with our AI-powered signals.',
               imagePath: 'assets/svg/rocket.svg',
             ),
           ),
@@ -186,6 +158,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
               alignment: AlignmentDirectional.centerEnd,
               children: [
                 ZButton(
+                  borderRadius: BorderRadius.circular(20),
                   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   text: 'Continue',
                   backgroundColor: AppColors.green,
@@ -203,7 +176,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
     );
   }
 
-  _buildSectionVertical({required String title, required String subtitle, required String imagePath}) {
+  _buildSectionVertical({required String title, required String subtitle}) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
@@ -214,7 +187,7 @@ class _OnboardingPage2State extends State<OnboardingPage2> {
         ),
         child: Column(
           children: [
-            SvgPicture.asset(imagePath, height: 35, width: 35),
+            // SvgPicture.asset(imagePath, height: 35, width: 35),
             SizedBox(height: 4),
             Text(
               title,

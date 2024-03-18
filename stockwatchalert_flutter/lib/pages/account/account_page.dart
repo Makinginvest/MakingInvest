@@ -7,18 +7,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:stockwatchalert/components/z_appbar_title.dart';
+import 'package:stockwatchalert/components/z_card.dart';
+import 'package:stockwatchalert/constants/app_colors.dart';
+import 'package:stockwatchalert/models/auth_user.dart';
+import 'package:stockwatchalert/models_providers/auth_provider.dart';
+import 'package:stockwatchalert/models_services/firebase_auth_service.dart';
+import 'package:stockwatchalert/pages/_app/onboarding_page.dart';
 
-import '../../components/z_app_bar_title.dart';
-import '../../components/z_card.dart';
-import '../../components/z_upgrade_subscription_card.dart';
-import '../../constants/app_colors.dart';
-import '../../models/auth_user.dart';
+import '../../components/z_upgrade_subsction_card.dart';
+import '../../constants/app_links.dart';
 import '../../models_providers/app_controls_provider.dart';
 import '../../models_providers/app_provider.dart';
-import '../../models_providers/auth_provider.dart';
 import '../../models_providers/theme_provider.dart';
 import '../../models_services/api_authuser_service.dart';
-import '../../models_services/firebase_auth_service.dart';
 import '../../utils/z_launch_url.dart';
 import 'account_delete_page.dart';
 
@@ -43,7 +45,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
     AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context);
     final androidLink = appControlsProvider.appControls.linkGooglePlay;
     final iosLink = appControlsProvider.appControls.linkAppStore;
-    final shareText = '''Hey check out Stock Watch Alert \n\n${iosLink} \n\n${androidLink}''';
+    final shareText = '''Hey check out StockWatchAlert \n\n${iosLink} \n\n${androidLink}''';
 
     final storeName = Platform.isAndroid ? 'Google Play' : 'App Store';
     final storeLink = Platform.isAndroid ? androidLink : iosLink;
@@ -55,6 +57,12 @@ class _MyAccountPageState extends State<MyAccountPage> {
       child: Scaffold(
         appBar: AppBar(
           title: AppBarTitle(),
+          actions: [
+            // ZCard(
+            //   child: Text('data'),
+            //   onTap: () => Get.to(() => OnboardingPage1()),
+            // )
+          ],
         ),
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -75,10 +83,6 @@ class _MyAccountPageState extends State<MyAccountPage> {
                 ),
               ),
             SizedBox(height: 24),
-            // ZCard(
-            //   child: Text('Onbaording'),
-            //   onTap: () => Get.to(() => OnboardingPage1()),
-            // ),
             ZUpgradeSubscriptionCard(),
             SizedBox(height: 24),
             AccountNotificationItem(svgPath: 'assets/svg/notification.svg', title: 'Enable general notifications'),
@@ -89,7 +93,23 @@ class _MyAccountPageState extends State<MyAccountPage> {
             SizedBox(height: 24),
             AccountItemLogout(svgPath: 'assets/svg/logout.svg', title: 'Logout'),
             _buildSignIn(),
-            FollowUs()
+            FollowUs(),
+            SizedBox(height: 24),
+            if (authUser != null)
+              DefaultTextStyle(
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+                child: Row(
+                  children: [
+                    Text('Version: '),
+                    Text(authUser.appVersion),
+                    Text('+${authUser.appBuildNumber}'),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
@@ -115,7 +135,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
 
                   if (fbUser != null && jsonWebToken != null) {
                     AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context, listen: false);
-                    ApiAuthUserService.deleteAccountFbUserJsonWebToken(fbUser, jsonWebToken, appControlsProvider.appControls.apiUrl);
+                    ApiAuthUserService.deleteAccountFbUserJsonWebToken(fbUser, jsonWebToken, appControlsProvider.appControls.apiUrlV1);
                   }
 
                   Provider.of<AppProvider>(context, listen: false).cancleAllStreams();
@@ -145,7 +165,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
 
                 if (fbUser != null && jsonWebToken != null) {
                   AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context, listen: false);
-                  ApiAuthUserService.deleteAccountFbUserJsonWebToken(fbUser, jsonWebToken, appControlsProvider.appControls.apiUrl);
+                  ApiAuthUserService.deleteAccountFbUserJsonWebToken(fbUser, jsonWebToken, appControlsProvider.appControls.apiUrlV1);
                 }
 
                 Provider.of<AppProvider>(context, listen: false).cancleAllStreams();
@@ -182,93 +202,37 @@ class FollowUs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppControlsProvider appControlsProvider = Provider.of<AppControlsProvider>(context);
-    final appControls = appControlsProvider.appControls;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 16),
-        Container(margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8), child: Text('Links:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900))),
-        Column(
-          children: [
-            if (appControls.linkGooglePlay != '')
-              if (Platform.isAndroid)
-                ZSocialMedia(
-                  text: 'Google Play',
-                  bgColor: AppColors.blue,
-                  icon: AntDesign.google,
-                  onTap: () => ZLaunchUrl.launchUrl(appControls.linkGooglePlay),
-                ),
-            if (appControls.linkAppStore != '')
-              ZSocialMedia(
-                text: 'App Store',
-                bgColor: Colors.grey,
-                icon: AntDesign.apple_o,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkAppStore),
-              ),
-            if (appControls.linkInstagram != '')
+        Container(margin: EdgeInsets.symmetric(horizontal: 0, vertical: 16), child: Text('Follow us:')),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          child: Row(
+            children: [
+              // ZSocialMedia(
+              //   text: 'Twitter',
+              //   color: AppColors.appColorBlue,
+              //   icon: AntDesign.twitter,
+              //   onTap: () => ZLaunchUrl.launchUrl(AppConstants.telegram),
+              // ),
+              // SizedBox(width: 16),
               ZSocialMedia(
                 text: 'Instagram',
-                bgColor: AppColors.pink,
+                color: AppColors.pink,
                 icon: AntDesign.instagram,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkInstagram),
+                onTap: () => ZLaunchUrl.launchUrl(AppLINKS.instagramUrl),
               ),
-            if (appControls.linkTelegram != '')
+              SizedBox(width: 16),
               ZSocialMedia(
                 text: 'Telegram',
-                bgColor: AppColors.blue,
+                color: AppColors.blue,
                 icon: AntDesign.message1,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkTelegram),
+                onTap: () => ZLaunchUrl.launchUrl(AppLINKS.telegram),
               ),
-            if (appControls.linkWhatsapp != '')
-              ZSocialMedia(
-                text: 'WhatsApp',
-                bgColor: AppColors.green,
-                icon: AntDesign.message1,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkWhatsapp),
-              ),
-            if (appControls.linkYoutube != '')
-              ZSocialMedia(
-                text: 'Youtube',
-                bgColor: AppColors.red,
-                icon: AntDesign.youtube,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkYoutube),
-              ),
-            if (appControls.linkTwitter != '')
-              ZSocialMedia(
-                text: 'Twitter',
-                bgColor: AppColors.blue,
-                icon: AntDesign.twitter,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkTwitter),
-              ),
-            if (appControls.linkSupport != '')
-              ZSocialMedia(
-                text: 'Support',
-                bgColor: Color(0xffFFBD24),
-                iconColor: Colors.black,
-                textStyle: TextStyle(color: Colors.black),
-                icon: AntDesign.user,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkSupport),
-              ),
-            if (appControls.linkTerms != '')
-              ZSocialMedia(
-                text: 'Terms',
-                bgColor: Color(0xffFFBD24),
-                iconColor: Colors.black,
-                textStyle: TextStyle(color: Colors.black),
-                icon: AntDesign.lock,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkTerms),
-              ),
-            if (appControls.linkPivacy != '')
-              ZSocialMedia(
-                text: 'Privacy',
-                bgColor: Color(0xffFFBD24),
-                iconColor: Colors.black,
-                textStyle: TextStyle(color: Colors.black),
-                icon: AntDesign.eyeo,
-                onTap: () => ZLaunchUrl.launchUrl(appControls.linkPivacy),
-              ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -278,36 +242,26 @@ class FollowUs extends StatelessWidget {
 class ZSocialMedia extends StatelessWidget {
   final IconData icon;
   final String text;
-  final Color bgColor;
-  final Color? iconColor;
-  final TextStyle? textStyle;
+  final Color color;
   final Function() onTap;
 
-  ZSocialMedia({
-    Key? key,
-    required this.icon,
-    required this.text,
-    required this.bgColor,
-    required this.onTap,
-    this.textStyle,
-    this.iconColor,
-  }) : super(key: key);
+  ZSocialMedia({Key? key, required this.icon, required this.text, required this.color, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-        decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          children: [
-            Icon(icon, color: iconColor),
-            SizedBox(width: 8),
-            if (textStyle != null) Text(text, style: textStyle),
-            if (textStyle == null) Text(text),
-          ],
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            children: [
+              Icon(icon),
+              SizedBox(height: 8),
+              Text(text),
+            ],
+          ),
         ),
       ),
     );
@@ -363,7 +317,7 @@ class AccountThemeItem extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 12),
           ],
         ),
       ),
@@ -407,7 +361,7 @@ class AccountNotificationItem extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 16),
           ],
         ),
       ),

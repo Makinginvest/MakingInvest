@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
-
-import '../../models/market_analysis.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:stockwatchalert/models/market_analysis.dart';
 
 class ApiMarketAnalysisService {
   static Dio _dio = Dio();
@@ -14,7 +13,7 @@ class ApiMarketAnalysisService {
     if (jsonWebToken == null) return null;
 
     try {
-      var response = await _dio.get(apiUrl + '/signals-analysis?jsonWebToken=${jsonWebToken}', options: Options(receiveTimeout: Duration(seconds: 5)));
+      var response = await _dio.get(apiUrl + '/v1/signals-analysis?jsonWebToken=${jsonWebToken}', options: Options(receiveTimeout: Duration(seconds: 5)));
 
       return MarketAnalysis.fromJson(response.data);
     } catch (e) {

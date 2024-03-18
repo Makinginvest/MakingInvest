@@ -1,9 +1,10 @@
+import 'package:loading_animations/loading_animations.dart';
+import 'package:stockwatchalert/components/z_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
-
-import '../components/z_card.dart';
+import 'package:stockwatchalert/constants/app_colors.dart';
 
 class ZGetUtils {
   static BuildContext context = Get.overlayContext!;
@@ -109,6 +110,17 @@ class ZGetUtils {
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: 500),
       barrierColor: Colors.black.withOpacity(0.5),
+    );
+  }
+
+  static showLoadingOverlay() {
+    Get.generalDialog(
+      pageBuilder: (context, animation, anotherAnimation) => Center(
+        child: LoadingBumpingLine.circle(
+          backgroundColor: AppColors.primary,
+        ),
+      ),
+      barrierColor: Colors.black.withOpacity(0.4),
     );
   }
 }

@@ -25,15 +25,11 @@ class ConnectionManagerSockerIo:
         self.dt_news_aggr_updated = None
         self.news_aggr = None
 
-        self.is_background_task_running_market_activities_aggr = False
-        self.last_updated_datetime_utc_market_activities_aggr = None
-        self.market_activities_aggr = None
-
         self.is_background_task_running_signal_aggr_open = False
         self.dt_signal_aggr_open_updated = None
         self.signal_aggr_open = []
 
-    # ------------------------------- CRYPTO PRICES ------------------------------ #
+        # ------------------------------- CRYPTO PRICES ------------------------------ #
 
     def set_is_background_task_running_crypto(self, value: bool):
         self.is_background_task_running_crypto = value
@@ -41,7 +37,7 @@ class ConnectionManagerSockerIo:
     def set_prices_crypto(self, prices_crypto: List):
         self.prices_crypto = prices_crypto
 
-    # ------------------------------- FOREX PRICES ------------------------------- #
+        # ------------------------------- FOREX PRICES ------------------------------- #
 
     def set_is_background_task_running_forex(self, value: bool):
         self.is_background_task_running_forex = value
@@ -49,7 +45,7 @@ class ConnectionManagerSockerIo:
     def set_prices_forex(self, prices_forex: List):
         self.prices_forex = prices_forex
 
-    # ------------------------------- STOCK PRICES ------------------------------- #
+        # ------------------------------- STOCK PRICES ------------------------------- #
 
     def set_is_background_task_running_stocks(self, value: bool):
         self.is_background_task_running_stocks = value
@@ -57,7 +53,7 @@ class ConnectionManagerSockerIo:
     def set_prices_stocks(self, prices_stocks: List):
         self.prices_stocks = prices_stocks
 
-    # ------------------------------ MARKET ANALYSIS ------------------------------ #
+        # ------------------------------ MARKET ANALYSIS ------------------------------ #
 
     def set_is_background_task_running_market_analysis(self, value: bool):
         self.is_background_task_running_market_analysis = value
@@ -68,7 +64,7 @@ class ConnectionManagerSockerIo:
     def set_market_analysis(self, market_analysis: Any):
         self.market_analysis = market_analysis
 
-    # ------------------------------ SYMBOLS TRACKER ------------------------------ #
+        # ------------------------------ SYMBOLS TRACKER ------------------------------ #
 
     def set_is_background_task_running_symbols_tracker(self, value: bool):
         self.is_background_task_running_symbols_tracker = value
@@ -79,7 +75,7 @@ class ConnectionManagerSockerIo:
     def set_symbols_tracker(self, symbols_tracker: Any):
         self.symbols_tracker = symbols_tracker
 
-    # ----------------------------------- NEWS ----------------------------------- #
+        # ----------------------------------- NEWS ----------------------------------- #
 
     def set_is_background_task_running_news_aggr(self, value: bool):
         self.is_background_task_running_news_aggr = value
@@ -90,18 +86,7 @@ class ConnectionManagerSockerIo:
     def set_news_aggr(self, news_aggr: Any):
         self.news_aggr = news_aggr
 
-    # ----------------------------------- MARKET ACTIVITY ----------------------------------- #
-
-    def set_is_background_task_running_market_activities_aggr(self, value: bool):
-        self.is_background_task_running_market_activities_aggr = value
-
-    def set_last_updated_datetime_utc_market_activities_aggr(self, last_updated_datetime_utc_market_activities_aggr: datetime.datetime):
-        self.last_updated_datetime_utc_market_activities_aggr = last_updated_datetime_utc_market_activities_aggr
-
-    def set_market_activities_aggr(self, market_activities_aggr: Any):
-        self.market_activities_aggr = market_activities_aggr
-
-    # ------------------------------- OPEN SIGNALS ------------------------------- #
+        # ------------------------------- OPEN SIGNALS ------------------------------- #
 
     def set_is_background_task_running_signal_aggr_open(self, value: bool):
         self.is_background_task_running_signal_aggr_open = value

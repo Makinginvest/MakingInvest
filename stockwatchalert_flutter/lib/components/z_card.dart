@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../constants/app_colors.dart';
-import '../constants/app_sizes.dart';
+import 'package:stockwatchalert/constants/app_colors.dart';
+import 'package:stockwatchalert/constants/app_sizes.dart';
 
 class ZCard extends StatelessWidget {
   final Widget child;
@@ -48,15 +47,15 @@ class ZCard extends StatelessWidget {
       width: width ?? null,
       decoration: BoxDecoration(
         color: color ?? defaultCardColor,
-        border: Border.all(color: borderRadiusColor ?? defaultBorderRadiusColor, width: borderWidth ?? AppSizes.cardBorderWidth),
-        borderRadius: borderRadius ?? BorderRadius.circular(AppSizes.cardRadius),
+        border: Border.all(color: borderRadiusColor ?? defaultBorderRadiusColor, width: borderWidth ?? AppSIZES.cardBorderWidth),
+        borderRadius: borderRadius ?? BorderRadius.circular(AppSIZES.cardRadius),
       ),
       margin: margin ?? EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Card(
         margin: EdgeInsets.all(0),
         color: color ?? defaultCardColor,
         elevation: elevation ?? 0,
-        shape: RoundedRectangleBorder(borderRadius: borderRadius ?? BorderRadius.circular(AppSizes.cardRadius)),
+        shape: RoundedRectangleBorder(borderRadius: borderRadius ?? BorderRadius.circular(AppSIZES.cardRadius)),
         child: InkWell(
           splashColor: inkColor ?? null,
           // splashColor: Color(0x66C8C8C8),

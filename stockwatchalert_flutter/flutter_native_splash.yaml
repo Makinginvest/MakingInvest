@@ -10,4 +10,4 @@ flutter_native_splash:
     image: assets/icon/splash_icon.png
     image_dark: assets/icon/splash_icon.png
 
-  fullscreen: true
+  fullscreen: false

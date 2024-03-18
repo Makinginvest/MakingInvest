@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:signalbyt/pages/_app/onboarding_page.dart';
+import 'package:stockwatchalert/pages/_app/onboarding_page.dart';
 
 import '../models/auth_user.dart';
 import '../models_services/_hive_helper.dart';

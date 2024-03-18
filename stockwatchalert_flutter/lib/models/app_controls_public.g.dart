@@ -9,9 +9,9 @@ part of 'app_controls_public.dart';
 AppControlsPublic _$AppControlsPublicFromJson(Map<String, dynamic> json) =>
     AppControlsPublic()
       ..id = json['id'] as String? ?? ''
-      ..apiWebSocketUrl = json['apiWebSocketUrl'] as String? ?? ''
+      ..apiWebSocketUrlV1 = json['apiWebSocketUrlV1'] as String? ?? ''
       ..frontendUrl = json['frontendUrl'] as String? ?? ''
-      ..apiUrl = json['apiUrl'] as String? ?? ''
+      ..apiUrlV1 = json['apiUrlV1'] as String? ?? ''
       ..adminUrl = json['adminUrl'] as String? ?? ''
       ..name = json['name'] as String? ?? ''
       ..apiHasAccess = json['apiHasAccess'] as bool? ?? false
@@ -30,9 +30,9 @@ AppControlsPublic _$AppControlsPublicFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AppControlsPublicToJson(AppControlsPublic instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'apiWebSocketUrl': instance.apiWebSocketUrl,
+      'apiWebSocketUrlV1': instance.apiWebSocketUrlV1,
       'frontendUrl': instance.frontendUrl,
-      'apiUrl': instance.apiUrl,
+      'apiUrlV1': instance.apiUrlV1,
       'adminUrl': instance.adminUrl,
       'name': instance.name,
       'apiHasAccess': instance.apiHasAccess,

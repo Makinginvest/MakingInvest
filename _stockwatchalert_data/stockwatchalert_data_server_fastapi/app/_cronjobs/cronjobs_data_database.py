@@ -15,13 +15,13 @@ is_data_mode = os.getenv("DATA_MODE")
 
 
 # # ---------------------------  CRYPTO --------------------------- #
-@aiocron.crontab("*/5 * * * *")
-async def cron_crypto_update_all_mongodb_historical_recent():
-    if is_production == "True" and is_allow_cron == "True" and is_data_mode == "True":
-        await asyncio.sleep(5)
-        tasks = [crypto_update_all_mongodb_historical_recent(timeframe="5m", limit=30)]
+# @aiocron.crontab("*/5 * * * *")
+# async def cron_crypto_update_all_mongodb_historical_recent():
+#     if is_production == "True" and is_allow_cron == "True" and is_data_mode == "True":
+#         await asyncio.sleep(5)
+#         tasks = [crypto_update_all_mongodb_historical_recent(timeframe="5m", limit=30)]
 
-        await asyncio.gather(*tasks)
+#         await asyncio.gather(*tasks)
 
 
 @aiocron.crontab("*/15 * * * *")

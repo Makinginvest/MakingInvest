@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "424571016440",
+    "project_id": "makinginvestsignally",
+    "storage_bucket": "makinginvestsignally.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424571016440:android:7bfd9f247b93d772ddd70d",
+        "android_client_info": {
+          "package_name": "com.makinginvest.signally"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424571016440-ief70bki1muc6a1tgs6ltgahteq8gsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDekTzJJe9kChySK-BZNaBXp2GqarS9coo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424571016440-3oalseea372alft7d8c7ahrs0j78go1f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "424571016440-8t6pohb9b2rfnspr69uv40t63fnfsuvu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.makinginvest.signally"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,10 +14,11 @@ class HiveHelper {
 
     if (apiUrl == '') {
       var x = await FirestoreService.getAppControlsPublic();
-      apiUrl = x.apiUrl;
+      apiUrl = x.apiUrlV1;
       settings.put('apiUrl', apiUrl);
     }
 
+    print(apiUrl);
     return apiUrl;
   }
 }
