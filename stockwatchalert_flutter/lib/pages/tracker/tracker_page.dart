@@ -26,9 +26,9 @@ class _TrackerPageState extends State<TrackerPage> {
 
   List<SymbolTracker> getFilteredSymbolTrackers(String search, List<SymbolTracker> symbolTrackers) {
     if (filterMode == 'All') symbolTrackers = symbolTrackers;
+    if (filterMode == 'Stocks') symbolTrackers = symbolTrackers.where((element) => element.market.toLowerCase() == 'stocks').toList();
     if (filterMode == 'Crypto') symbolTrackers = symbolTrackers.where((element) => element.market.toLowerCase() == 'crypto').toList();
     if (filterMode == 'Forex') symbolTrackers = symbolTrackers.where((element) => element.market.toLowerCase() == 'forex').toList();
-    if (filterMode == 'Stocks') symbolTrackers = symbolTrackers.where((element) => element.market.toLowerCase() == 'stocks').toList();
 
     if (search.isEmpty) return symbolTrackers;
     return symbolTrackers.where((element) => element.symbol.toLowerCase().contains(search.toLowerCase())).toList();
@@ -71,9 +71,9 @@ class _TrackerPageState extends State<TrackerPage> {
           height: 32,
           child: ListView(shrinkWrap: true, scrollDirection: Axis.horizontal, children: [
             _buildFilterHeading(text: 'All', total: symbolTrackers.length),
+            _buildFilterHeading(text: 'Stocks', total: symbolTrackerAggr.stocks.length),
             _buildFilterHeading(text: 'Crypto', total: symbolTrackerAggr.crypto.length),
             _buildFilterHeading(text: 'Forex', total: symbolTrackerAggr.forex.length),
-            _buildFilterHeading(text: 'Stocks', total: symbolTrackerAggr.stocks.length),
           ]),
         ),
         Expanded(

@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime, timezone
 import pandas as pd
-from app.helpers._functions_mongodb.forex__functions import get_forex_symbols_oanda, get_onada_forex_ohlcv_data
+from app.helpers._functions_mongodb.forex_functions import get_forex_symbols_oanda, get_onada_forex_ohlcv_data
 from app._database_data.db_connect_data import database_mongodb_data
 
 
@@ -31,7 +31,7 @@ async def getPricesForex():
 
         return data
     except Exception as e:
-        print("Error:ws pulling data", e)
+        print("Error:getPricesForex", e)
         return []
 
 
@@ -58,5 +58,5 @@ async def get_ohlcv_data(symbol, granularity="M1") -> pd.DataFrame:
         return df.iloc[-1:] if not df.empty else None
 
     except Exception as e:
-        print("Error:ws pulling data", e)
+        print("Error:getPricesForex", e)
         return None

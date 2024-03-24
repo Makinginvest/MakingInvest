@@ -4,7 +4,7 @@ from fastapi.exceptions import HTTPException
 
 from _project.log_config.app_logger import app_logger
 from app._firebase.a_validate_api_key import validate_apikey
-from app.helpers.data.get_backtest_data import get_backtesting_data_crypto, get_backtesting_data_forex, get_backtesting_data_stocks
+from app.helpers.api.backtest_data import get_backtesting_data_crypto, get_backtesting_data_forex, get_backtesting_data_stocks
 
 router_backtest_data_v1 = APIRouter(prefix="/v1/backtest-data")
 
@@ -39,15 +39,11 @@ async def func(apikey: str = None, start_date: str = "2023-01-01", end_date: str
 
 # ---------------------------------- STOCKS ---------------------------------- #
 @router_backtest_data_v1.get("/stocks")
-async def func(apikey: str = None, start_date: str = "2022-01-01", end_date: str = "2024-03-08", timeframe: str = "1d"):
+async def func(apikey: str = None, start_date: str = "2023-01-01", end_date: str = "2024-03-22", timeframe: str = "1h"):
     try:
         validate_apikey(apikey)
         r = await get_backtesting_data_stocks(timeframe=timeframe, start_datetime=start_date, end_datetime=end_date)
-        r = await get_backtesting_data_stocks(timeframe="4h", start_datetime=start_date, end_datetime=end_date)
-        r = await get_backtesting_data_stocks(timeframe="2h", start_datetime=start_date, end_datetime=end_date)
-        r = await get_backtesting_data_stocks(timeframe="1h", start_datetime=start_date, end_datetime=end_date)
-        r = await get_backtesting_data_stocks(timeframe="30m", start_datetime=start_date, end_datetime=end_date)
-        r = await get_backtesting_data_stocks(timeframe="15m", start_datetime=start_date, end_datetime=end_date)
+        # r = await get_backtesting_data_stocks(timeframe="15m", start_datetime=start_date, end_datetime=end_date)
         return r
 
     except HTTPException as e:

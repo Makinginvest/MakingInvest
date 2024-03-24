@@ -6,10 +6,11 @@ from pandas import Timestamp
 
 import aiohttp
 import pandas as pd
+import requests
 
 from app._database_data.db_connect_data import database_mongodb_data
-from app.helpers._functions_mongodb.crypto__functions import get_USDT_symbols_by_value
-from app.helpers._functions_mongodb.crypto__mongodb_update import crypto_update_all_mongodb_historical_recent
+from app.helpers._functions_mongodb.crypto_functions import get_USDT_symbols_by_value
+from app.helpers._functions_mongodb.crypto_mongodb_update import crypto_update_all_mongodb_historical_recent
 
 
 async def update_all_symbols_mongodb_aggr():
@@ -77,7 +78,8 @@ async def update_symbols_forex_mongodb_aggr():
 
 async def update_symbols_stocks_mongodb_aggr():
     try:
-        symbols = pd.read_csv("_project/datasets/data/_data_symbols_stock_options_sp500.csv")
+        await fetch_stocks_to_csv()
+        symbols = pd.read_csv("_project/datasets/data/_data_symbols_stock_us_market.csv")
         collection = database_mongodb_data["symbols"]
         await collection.update_one({"type": "stocks"}, {"$set": {"data": symbols.to_dict("records")}}, upsert=True)
 
@@ -203,8 +205,8 @@ async def get_binance_data_daily_symbol_value():
                         async with session.get(url) as resp:
                             r = await resp.read()
                             z = zipfile.ZipFile(io.BytesIO(r))
-                            z.extractall("_project.datasets/_temp/binance_raw")
-                            file_paths.append(f"_project.datasets/_temp/binance_raw/{s}-1d-{yesterday}.csv")
+                            z.extractall("_project/datasets/binance/_temp/binance_raw")
+                            file_paths.append(f"_project/datasets/binance/_temp/binance_raw/{s}-1d-{yesterday}.csv")
                     except Exception as e:
                         pass
             await session.close()
@@ -241,3 +243,50 @@ async def get_symbols_crypto_binance_delete():
 
     symbols = [s.replace("/", "") for s in symbols]
     return symbols
+
+
+async def fetch_stocks_to_csv():
+    """
+    Fetch stock list from the Alpaca API, filter for stocks under $100, and write to a CSV file.
+
+    Parameters:
+    - api_url: URL of the Alpaca API endpoint to fetch stock data.
+    - headers: Headers required for authentication with the Alpaca API.
+    - csv_filename: The name of the CSV file to write to.
+    """
+    api_url = "https://paper-api.alpaca.markets/v2/assets?status=active&exchange=NYSE%2CNASDAQ&attributes="
+    headers = {"APCA-API-KEY-ID": "PKP54IQSJ4CAPG89OJ70", "APCA-API-SECRET-KEY": "WyaK46LT5OL7pFm6o5ScJelU6nGhAdPExJqtkujo", "accept": "application/json"}
+    csv_filename = "_project/datasets/data/_data_symbols_stock_us_market.csv"
+
+    # Fetch the data
+    response = requests.get(api_url, headers=headers)
+    if response.status_code == 200:
+        # Convert JSON response to pandas DataFrame
+        df = pd.DataFrame(response.json())
+        # Filter for stocks from NASDAQ, NYSE, AMEX, and CBOE exchanges
+        keep_exchanges = ["NASDAQ", "NYSE", "AMEX", "CBOE"]
+        df = df[df["exchange"].isin(keep_exchanges)]
+
+        # Filter for assets of type "stock"
+        # df = df[df["asset_class"] == "us_equity"]
+        df = df[df["tradable"] == True]
+        # remove where symbol containers "."
+        # print(df["symbol"])
+        df = df[~df["symbol"].str.contains(".", regex=False)]
+        df = df[~df["symbol"].str.contains("-", regex=False)]
+        df = df[~df["name"].str.contains("ETF", regex=False)]
+        df = df[~df["name"].str.contains("%", regex=False)]
+
+        columns = ["exchange", "symbol", "name", "status", "tradable"]
+
+        # Write to CSV
+        df[columns].to_csv(csv_filename, index=False)
+
+        print("Successfully fetched data from alpaca API.")
+    else:
+        print("Failed to fetch data")
+
+
+# Alpaca API endpoint
+
+# Fetch stock data and write to CSV

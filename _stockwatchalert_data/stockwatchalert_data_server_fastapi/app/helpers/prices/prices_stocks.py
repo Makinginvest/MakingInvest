@@ -13,7 +13,7 @@ async def getPricesStocks():
     url = f"https://financialmodelingprep.com/api/v3/available-traded/list?apikey={api_key}"
 
     try:
-        symbols = await get_USDT_symbols_by_value("_project/datasets/data/_data_symbols_stock_options_sp500.csv")
+        symbols = await get_USDT_symbols_by_value("_project/datasets/data/_data_symbols_stock_us_market.csv")
 
         data = []
 
@@ -41,7 +41,7 @@ async def getPricesStocks():
         return []
 
 
-async def get_USDT_symbols_by_value(path="_project/datasets/data/_data_symbols_stock_options_sp500.csv"):
+async def get_USDT_symbols_by_value(path="_project/datasets/data/_data_symbols_stock_us_market.csv"):
     symbols = pd.read_csv(path)
     symbols = symbols["symbol"].tolist()
     return symbols

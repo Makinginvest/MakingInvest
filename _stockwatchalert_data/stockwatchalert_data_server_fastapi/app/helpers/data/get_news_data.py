@@ -122,7 +122,7 @@ async def update_database_news_aggr(news_crypto=None, news_forex=None, news_stoc
         return data
 
     except Exception as e:
-        print("Error update_firestore_crypto_signals", e)
+        print("Error update_database_news_aggr", e)
     return {}
 
 

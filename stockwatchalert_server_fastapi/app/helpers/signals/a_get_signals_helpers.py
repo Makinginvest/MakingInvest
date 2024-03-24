@@ -68,8 +68,9 @@ signals_columns = [
 
 
 def calculate_results(
-    df_signals: pd.DataFrame,
-    df_candles: pd.DataFrame,
+    df_candles_entries: pd.DataFrame = pd.DataFrame(),
+    df_candles_targets: pd.DataFrame = pd.DataFrame(),
+    df_candles_exits: pd.DataFrame = pd.DataFrame(),
     active_trades_dict=[],
     max_open_trades=20,
     starting_bal=1000,
@@ -82,7 +83,8 @@ def calculate_results(
     current_time_floor=pd.Timestamp(datetime.utcnow()).floor("15min"),
 ):
 
-    if len(df_signals) == 0 and len(active_trades_dict) == 0:
+    print("len(df_candles_exits)", len(df_candles_exits))
+    if len(df_candles_entries) == 0 and len(active_trades_dict) == 0:
         return {"signalsClosed": [], "signalsActive": []}
 
     active_trades_dict = active_trades_dict
@@ -103,68 +105,76 @@ def calculate_results(
     max_bal = starting_bal
 
     # only add column is dataframe is not empty
-    if len(df_signals) > 0:
-        df_signals["tp1Pct"] = tp1Pct
-        df_signals["tp2Pct"] = tp2Pct
-        df_signals["tp3Pct"] = tp3Pct
-        df_signals["tp1Pips"] = df_signals["tp1Pct"] * df_signals["close"] * 10000
-        df_signals["tp2Pips"] = df_signals["tp2Pct"] * df_signals["close"] * 10000
-        df_signals["tp3Pips"] = df_signals["tp3Pct"] * df_signals["close"] * 10000
-        df_signals["tp1Price"] = np.where(df_signals["entryType"] == "long", df_signals["close"] * (1 + df_signals["tp1Pct"]), df_signals["close"] * (1 - df_signals["tp1Pct"]))
-        df_signals["tp2Price"] = np.where(df_signals["entryType"] == "long", df_signals["close"] * (1 + df_signals["tp2Pct"]), df_signals["close"] * (1 - df_signals["tp2Pct"]))
-        df_signals["tp3Price"] = np.where(df_signals["entryType"] == "long", df_signals["close"] * (1 + df_signals["tp3Pct"]), df_signals["close"] * (1 - df_signals["tp3Pct"]))
-        df_signals["tp1DateTimeEst"] = None
-        df_signals["tp1DateTimeUtc"] = None
-        df_signals["tp2DateTimeEst"] = None
-        df_signals["tp2DateTimeUtc"] = None
-        df_signals["tp3DateTimeEst"] = None
-        df_signals["tp3DateTimeUtc"] = None
-        df_signals["slPct"] = slPct
-        df_signals["slPips"] = df_signals["slPct"] * df_signals["close"] * 10000
-        df_signals["slPrice"] = np.where(df_signals["entryType"] == "long", df_signals["close"] * (1 + df_signals["slPct"]), df_signals["close"] * (1 - df_signals["slPct"]))
-        df_signals["slDateTimeEst"] = None
-        df_signals["slDateTimeUtc"] = None
-        df_signals["comment"] = ""
-        df_signals["analysisImage"] = ""
-        df_signals["tradeDurationSeconds"] = None
-        df_signals["tradeDurationStr"] = ""
-        df_signals["statusTrade"] = ""
-        df_signals["statusTarget"] = "In Progress"
-        df_signals["entryDateTimeUtc"] = None
-        df_signals["entryDateTimeEst"] = None
-        df_signals["exitDateTimeUtc"] = None
-        df_signals["exitDateTimeEst"] = None
-        df_signals["entryPrice"] = df_signals["close"]
-        df_signals["exitPrice"] = None
-        df_signals["lastCheckedDateTimeUtc"] = df_signals["dateTimeUtc"]
-        df_signals["openTrades"] = 0
-        df_signals["amtAvailable"] = 0
-        df_signals["amtTradeStart"] = 0
-        df_signals["amtTrade"] = 0
-        df_signals["amtProfit"] = 0
-        df_signals["amtProfitMaxPct"] = 0
-        df_signals["amtProfitMinPct"] = 0
-        df_signals["amtProfitMaxPips"] = 0
-        df_signals["amtProfitMinPips"] = 0
-        df_signals["amtProfitMaxDateTimeUtc"] = None
-        df_signals["amtProfitMinDateTimeUtc"] = None
-        df_signals["leverage"] = lev
-        df_signals["market"] = market
-        df_signals["minPrice"] = df_signals["low"]
-        df_signals["maxPrice"] = df_signals["high"]
+    if len(df_candles_entries) > 0:
+        df_candles_entries["tp1Pct"] = tp1Pct
+        df_candles_entries["tp2Pct"] = tp2Pct
+        df_candles_entries["tp3Pct"] = tp3Pct
+        df_candles_entries["tp1Pips"] = df_candles_entries["tp1Pct"] * df_candles_entries["close"] * 10000
+        df_candles_entries["tp2Pips"] = df_candles_entries["tp2Pct"] * df_candles_entries["close"] * 10000
+        df_candles_entries["tp3Pips"] = df_candles_entries["tp3Pct"] * df_candles_entries["close"] * 10000
+        df_candles_entries["tp1Price"] = np.where(
+            df_candles_entries["entryType"] == "long", df_candles_entries["close"] * (1 + df_candles_entries["tp1Pct"]), df_candles_entries["close"] * (1 - df_candles_entries["tp1Pct"])
+        )
+        df_candles_entries["tp2Price"] = np.where(
+            df_candles_entries["entryType"] == "long", df_candles_entries["close"] * (1 + df_candles_entries["tp2Pct"]), df_candles_entries["close"] * (1 - df_candles_entries["tp2Pct"])
+        )
+        df_candles_entries["tp3Price"] = np.where(
+            df_candles_entries["entryType"] == "long", df_candles_entries["close"] * (1 + df_candles_entries["tp3Pct"]), df_candles_entries["close"] * (1 - df_candles_entries["tp3Pct"])
+        )
+        df_candles_entries["tp1DateTimeEst"] = None
+        df_candles_entries["tp1DateTimeUtc"] = None
+        df_candles_entries["tp2DateTimeEst"] = None
+        df_candles_entries["tp2DateTimeUtc"] = None
+        df_candles_entries["tp3DateTimeEst"] = None
+        df_candles_entries["tp3DateTimeUtc"] = None
+        df_candles_entries["slPct"] = slPct
+        df_candles_entries["slPips"] = df_candles_entries["slPct"] * df_candles_entries["close"] * 10000
+        df_candles_entries["slPrice"] = np.where(
+            df_candles_entries["entryType"] == "long", df_candles_entries["close"] * (1 + df_candles_entries["slPct"]), df_candles_entries["close"] * (1 - df_candles_entries["slPct"])
+        )
+        df_candles_entries["slDateTimeEst"] = None
+        df_candles_entries["slDateTimeUtc"] = None
+        df_candles_entries["comment"] = ""
+        df_candles_entries["analysisImage"] = ""
+        df_candles_entries["tradeDurationSeconds"] = None
+        df_candles_entries["tradeDurationStr"] = ""
+        df_candles_entries["statusTrade"] = ""
+        df_candles_entries["statusTarget"] = "In Progress"
+        df_candles_entries["entryDateTimeUtc"] = None
+        df_candles_entries["entryDateTimeEst"] = None
+        df_candles_entries["exitDateTimeUtc"] = None
+        df_candles_entries["exitDateTimeEst"] = None
+        df_candles_entries["entryPrice"] = df_candles_entries["close"]
+        df_candles_entries["exitPrice"] = None
+        df_candles_entries["lastCheckedDateTimeUtc"] = df_candles_entries["dateTimeUtc"]
+        df_candles_entries["openTrades"] = 0
+        df_candles_entries["amtAvailable"] = 0
+        df_candles_entries["amtTradeStart"] = 0
+        df_candles_entries["amtTrade"] = 0
+        df_candles_entries["amtProfit"] = 0
+        df_candles_entries["amtProfitMaxPct"] = 0
+        df_candles_entries["amtProfitMinPct"] = 0
+        df_candles_entries["amtProfitMaxPips"] = 0
+        df_candles_entries["amtProfitMinPips"] = 0
+        df_candles_entries["amtProfitMaxDateTimeUtc"] = None
+        df_candles_entries["amtProfitMinDateTimeUtc"] = None
+        df_candles_entries["leverage"] = lev
+        df_candles_entries["market"] = market
+        df_candles_entries["minPrice"] = df_candles_entries["low"]
+        df_candles_entries["maxPrice"] = df_candles_entries["high"]
 
         # if symbol includes JPY and market is forex, divide tp1Pips, tp2Pips, tp3Pips and slPips by 100
-        df_signals["tp1Pips"] = df_signals.apply(lambda x: x["tp1Pips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["tp1Pips"], axis=1)
-        df_signals["tp2Pips"] = df_signals.apply(lambda x: x["tp2Pips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["tp2Pips"], axis=1)
-        df_signals["tp3Pips"] = df_signals.apply(lambda x: x["tp3Pips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["tp3Pips"], axis=1)
-        df_signals["slPips"] = df_signals.apply(lambda x: x["slPips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["slPips"], axis=1)
+        df_candles_entries["tp1Pips"] = df_candles_entries.apply(lambda x: x["tp1Pips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["tp1Pips"], axis=1)
+        df_candles_entries["tp2Pips"] = df_candles_entries.apply(lambda x: x["tp2Pips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["tp2Pips"], axis=1)
+        df_candles_entries["tp3Pips"] = df_candles_entries.apply(lambda x: x["tp3Pips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["tp3Pips"], axis=1)
+        df_candles_entries["slPips"] = df_candles_entries.apply(lambda x: x["slPips"] / 100 if "JPY" in x["symbol"] and x["market"] == "forex" else x["slPips"], axis=1)
 
-    # datetimes_signal = df_signals["dateTimeUtc"].unique()
-    df_candles_datetimes = df_candles["dateTimeUtc"].sort_values(ascending=True).unique()
+    # datetimes_signal = df_candles_signals["dateTimeUtc"].unique()
+    df_candles_datetimes = df_candles_targets["dateTimeUtc"].sort_values(ascending=True).unique()
     df_candles_datetime_first = df_candles_datetimes[0]
     df_candles_datetime_last = df_candles_datetimes[-1]
-    df_candles["dateTimeUtc2"] = df_candles["dateTimeUtc"]
-    grouped_candles = df_candles.groupby("symbol").apply(lambda x: x.set_index("dateTimeUtc2"))
+    df_candles_targets["dateTimeUtc2"] = df_candles_targets["dateTimeUtc"]
+    grouped_candles = df_candles_targets.groupby("symbol").apply(lambda x: x.set_index("dateTimeUtc2"))
     # write to file
     # print("df_candles_datetime_first", df_candles_datetime_first, "df_candles_datetime_last", df_candles_datetime_last)
 
@@ -392,13 +402,44 @@ def calculate_results(
                             break
                     break
 
-        # update the active trades list
+        # -------------------------- handles closing signals ------------------------- #
+        if len(active_trades_dict) > 0:
+            for trade in active_trades_dict:
+                symbol = trade["symbol"]
+                exit_signals = df_candles_exits[df_candles_exits["dateTimeUtc"] == current_time] if df_candles_entries.shape[0] > 0 else pd.DataFrame()
+                exit_signals_symbol = exit_signals[exit_signals["symbol"] == symbol] if exit_signals.shape[0] > 0 else pd.DataFrame()
+                exit_signal = exit_signals_symbol.iloc[0] if not exit_signals_symbol.empty else None
+
+                if exit_signal is not None and trade["isClosed"] == False and trade["entryType"] == exit_signal["exitType"]:
+                    if trade["entryType"] == "long":
+                        current_profit_pct = (exit_signal["close"] - trade["entryPrice"]) / trade["entryPrice"]
+                    else:
+                        current_profit_pct = (trade["entryPrice"] - exit_signal["close"]) / trade["entryPrice"]
+
+                    trade["isClosed"] = True
+                    trade["comment"] = f"exiting {current_profit_pct}"
+                    trade["exitPrice"] = exit_signal["close"]
+                    trade["exitDateTimeUtc"] = exit_signal["dateTimeUtc"]
+                    trade["exitDateTimeEst"] = exit_signal["dateTimeEst"]
+                    trade["statusTrade"] = "loss" if trade["statusTrade"] == "open" else trade["statusTrade"]
+                    # trade["statusTarget"] = "Target 3"
+                    # trade["amtProfit"] = trade["amtTrade"] * trade["tp1Pct"] * lev
+                    # print("symbols", symbol, trade["statusTrade"], trade["statusTarget"], trade["exitPrice"], trade["exitDateTimeUtc"], trade["exitDateTimeEst"])
+                    for trade_outcome in trade_outcomes:
+                        if trade_outcome["symbol"] == trade["symbol"] and trade_outcome["entryDateTimeUtc"] == trade["entryDateTimeUtc"]:
+                            print("symbols", symbol, trade["statusTrade"], trade["statusTarget"], trade["exitPrice"], trade["exitDateTimeUtc"], trade["exitDateTimeEst"])
+                            trade_outcome = trade
+                            break
+                    else:
+                        trade_outcomes.append(trade)
+
+        # ----------------------- update the active trades list ---------------------- #
         active_trades_dict = [trade for trade in active_trades_dict if trade["isClosed"] == False]
 
         # -------------------------------- New Signals ------------------------------- #
         if len(active_trades_dict) < max_open_trades:
-            new_signals = df_signals[df_signals["dateTimeUtc"] == current_time] if df_signals.shape[0] > 0 else pd.DataFrame()
-            for _, row in new_signals.iterrows():
+            exit_signals = df_candles_entries[df_candles_entries["dateTimeUtc"] == current_time] if df_candles_entries.shape[0] > 0 else pd.DataFrame()
+            for _, row in exit_signals.iterrows():
 
                 # --- PRODUCTION  PREVENT OLD SIGNALS FROM BEING ADDED TO THE ACTIVE TRADES -- #
                 if is_production == "True":
@@ -442,7 +483,7 @@ def calculate_results(
     df_active_trades = pd.DataFrame(active_trades_dict)
 
     get_results_table(df_trades_outcomes=df_trade_outcomes, starting_bal=starting_bal, current_bal=curr_bal, min_bal=min_bal, max_bal=max_bal, active_trades=active_trades_dict)
-    get_signals_csv(df_trade_outcomes, "_project/data_results/df_signals.csv")
+    get_signals_csv(df_trade_outcomes, "_project/data/results/df_candles_signals.csv")
 
     df_trade_outcomes.replace([np.inf, -np.inf, np.nan], None, inplace=True)
     df_active_trades.replace([np.inf, -np.inf, np.nan], None, inplace=True)

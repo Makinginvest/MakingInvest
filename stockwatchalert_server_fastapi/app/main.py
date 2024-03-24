@@ -11,7 +11,7 @@ import app._firebase.firebase
 from app._firebase.firebase import ensure_firebase_app
 from _project.log_config.dict_config import log_config
 from app._database.db_connect_data import close_mongodb_connection, connect_to_mongodb
-from app.helpers.data.symbols_crypto import update_all_symbols_from_data_db_mongodb_aggr
+from app.helpers.api.symbols_crypto import update_all_symbols_from_data_db_mongodb_aggr
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -29,6 +29,7 @@ from app.routers.v1.websockets.route_socketio_v1 import sio_app_v1
 from app.routers.v1.signals.route_backtest_data_v1 import router_backtest_data_v1
 from app.routers.v1.signals.route_signals_v1 import router_signals_v1
 from app.routers.v1.api.route_signals_results_v1 import router_signals_results_v1
+from app.routers.v1.api.route_screener_v1 import router_screener_v1
 
 dictConfig(log_config)
 
@@ -59,7 +60,7 @@ if is_production != "True":
 @app.on_event("startup")
 async def startup():
     await connect_to_mongodb()
-    await update_all_symbols_from_data_db_mongodb_aggr()
+    # await update_all_symbols_from_data_db_mongodb_aggr()
     ensure_firebase_app()
 
 
@@ -84,3 +85,4 @@ app.include_router(router_users_v1)
 app.include_router(router_backtest_data_v1)
 app.include_router(router_signals_v1)
 app.include_router(router_signals_results_v1)
+app.include_router(router_screener_v1)

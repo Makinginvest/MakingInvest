@@ -285,6 +285,7 @@ class _ZSignalCardV1State extends State<ZSignalCardV1> {
     print('Menu is show');
   }
 
+  // ignore: unused_element
   void _showStatusDialog({required SignalV1 signal}) {
     Get.bottomSheet(Column(
       mainAxisSize: MainAxisSize.min,

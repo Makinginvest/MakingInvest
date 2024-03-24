@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from app._firebase.a_validate_api_key import validate_apikey
 from app._firebase.a_validate_key_jsonwebtoken import validate_apikey_json_webtoken
-from app.helpers.api.get_news_data import update_all_news_mongodb_firestore_aggr
+from app.helpers.api.news_data import update_all_news_mongodb_firestore_aggr
 
 
 router_news_v1 = APIRouter(prefix="/v1")

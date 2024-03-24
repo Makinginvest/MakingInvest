@@ -14,6 +14,7 @@ class ApiSymbolTrackerService {
     if (jsonWebToken == null) return null;
 
     try {
+      print(apiUrl + '/v1/symbols-trackers?jsonWebToken=${jsonWebToken}');
       var response = await _dio.get(apiUrl + '/v1/symbols-trackers?jsonWebToken=${jsonWebToken}', options: Options(receiveTimeout: Duration(seconds: 5)));
 
       return SymbolTrackerAggr.fromJson(response.data);

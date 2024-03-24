@@ -13,7 +13,6 @@ import 'package:stockwatchalert/constants/app_colors.dart';
 import 'package:stockwatchalert/models/auth_user.dart';
 import 'package:stockwatchalert/models_providers/auth_provider.dart';
 import 'package:stockwatchalert/models_services/firebase_auth_service.dart';
-import 'package:stockwatchalert/pages/_app/onboarding_page.dart';
 
 import '../../components/z_upgrade_subsction_card.dart';
 import '../../constants/app_links.dart';

@@ -53,7 +53,7 @@ async def get_symbol_tracker_all():
 async def get_symbols_trackers_stocks():
     try:
         # get symbols
-        symbols = await get_USDT_symbols_by_value("_project/datasets/data/_data_symbols_stock_options_sp500.csv")
+        symbols = await get_USDT_symbols_by_value("_project/datasets/data/_data_symbols_stock_us_market.csv")
         symbols = symbols[:200]
 
         df = pd.DataFrame()

@@ -1,8 +1,9 @@
 import asyncio
 import os
+import re
 import pandas as pd
 from app._database_data.db_connect_data import database_mongodb_data
-from pymongo import UpdateOne
+from pymongo import InsertOne, ReplaceOne, UpdateOne
 from datetime import datetime
 
 from dotenv import load_dotenv
@@ -46,22 +47,27 @@ async def get_mongodb_historical(symbol, histCollection=None, timeframe="15m", l
         return None
 
 
-async def update_mongodb_data_by_symbol(data, baseCollection=None, timeframe="15m"):
+async def update_mongodb_data_by_symbol(data, baseCollection=None, timeframe="15m", batch_size=100000, use_replace_one=True):
     if baseCollection is None:
         raise Exception("baseCollection is None")
 
     try:
         collection_historical_crypto_by_timeframe = database_mongodb_data[f"{baseCollection}{timeframe}"]
-        updates = []
+        total_items = len(data)
+        print(f"Updating {total_items} items to {baseCollection}{timeframe}...")
 
-        # return "done"
+        for i in range(0, total_items, batch_size):
+            batch = data[i : i + batch_size]
 
-        for item in data:
-            updates.append(
-                UpdateOne(
-                    {"symbol": item["symbol"], "dateTimeUtc": item["dateTimeUtc"], "timeframe": timeframe},
-                    {
-                        "$set": {
+            if use_replace_one:
+                operations = [
+                    ReplaceOne(
+                        filter={
+                            "symbol": item["symbol"],
+                            "dateTimeUtc": item["dateTimeUtc"],
+                            "timeframe": timeframe,
+                        },
+                        replacement={
                             "open": item["open"],
                             "high": item["high"],
                             "low": item["low"],
@@ -70,20 +76,56 @@ async def update_mongodb_data_by_symbol(data, baseCollection=None, timeframe="15
                             "dateTimeUtc": item["dateTimeUtc"],
                             "dateTimeEst": item["dateTimeEst"],
                             "symbol": item["symbol"],
-                            "timeframe": item["timeframe"],
+                            "timeframe": timeframe,
+                        },
+                        upsert=True,
+                    )
+                    for item in batch
+                ]
+            else:
+                operations = [
+                    InsertOne(
+                        {
+                            "open": item["open"],
+                            "high": item["high"],
+                            "low": item["low"],
+                            "close": item["close"],
+                            "volume": item["volume"],
+                            "dateTimeUtc": item["dateTimeUtc"],
+                            "dateTimeEst": item["dateTimeEst"],
+                            "symbol": item["symbol"],
+                            "timeframe": timeframe,
                         }
-                    },
-                    upsert=True,
-                )
-            )
+                    )
+                    for item in batch
+                ]
 
-        for i in range(0, len(updates), 5000):
-            res = await collection_historical_crypto_by_timeframe.bulk_write(updates[i : i + 5000])
+            result = None
+            try:
+                result = await collection_historical_crypto_by_timeframe.bulk_write(operations, ordered=False)
+            except Exception as e:
+                # if error is broken pipe, then try again
+                if ("broken pipe" in str(e)) or ("connection reset by peer" in str(e)) or ("Broken pipe" in str(e)):
+                    print("Trying broken pipe", e) if is_production != "True" else None
+                    await asyncio.sleep(15)
+                    result = await collection_historical_crypto_by_timeframe.bulk_write(operations, ordered=False)
+                    print("Broken pipe fixed") if is_production != "True" else None
+                if "duplicate key error" not in str(e):
+                    pass
+            if result and is_production != "True":
+                inserted_count = result.inserted_count
+                modified_count = result.modified_count
+                upserted_count = result.upserted_count
+                print(f"inserted_count: {inserted_count}")
+                print(f"modified_count: {modified_count}")
+                print(f"upserted_count: {upserted_count}")
 
         return {"status": "done"}
 
     except Exception as e:
-        print("update_mongodb_data_by_symbol2", e)
+        # if the error is a duplicate key error, then just ignore it
+        if "duplicate key error" not in str(e):
+            print("update_mongodb_data_by_symbol2", e)
 
 
 async def update_signals_by_symbol(

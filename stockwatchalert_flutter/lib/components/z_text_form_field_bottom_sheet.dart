@@ -59,7 +59,7 @@ class _ZTextFormFieldBottomSheetState extends State<ZTextFormFieldBottomSheet> {
     return Container(
       margin: widget.margin ?? EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: TextFormField(
-        style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w500),
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         maxLines: null,
         controller: valueController,
         autovalidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
@@ -88,14 +88,15 @@ class _ZTextFormFieldBottomSheetState extends State<ZTextFormFieldBottomSheet> {
             prefixStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color),
             fillColor: Colors.grey.shade100,
             suffixIcon: Icon(Icons.arrow_drop_down),
+            suffixIconConstraints: BoxConstraints(maxHeight: 14, minWidth: 25),
             suffixStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color),
             labelStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color),
-            contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: enabledBorderColor, width: 1), borderRadius: borderRadius),
-            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: focusedBorderColor, width: 1), borderRadius: borderRadius),
-            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: errorBorderColor, width: 1), borderRadius: borderRadius),
-            focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: focusedErrorBorderColor, width: 1), borderRadius: borderRadius),
-            disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: disabledBorderColor, width: 1), borderRadius: borderRadius),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: enabledBorderColor, width: .75), borderRadius: borderRadius),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: focusedBorderColor, width: .75), borderRadius: borderRadius),
+            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: errorBorderColor, width: .75), borderRadius: borderRadius),
+            focusedErrorBorder: OutlineInputBorder(borderSide: BorderSide(color: focusedErrorBorderColor, width: .75), borderRadius: borderRadius),
+            disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: disabledBorderColor, width: .75), borderRadius: borderRadius),
             isDense: true),
       ),
     );
@@ -120,8 +121,7 @@ class _ZTextFormFieldBottomSheetState extends State<ZTextFormFieldBottomSheet> {
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          borderRadius:
-                              widget.items.indexOf(item) == 0 ? BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)) : null,
+                          borderRadius: widget.items.indexOf(item) == 0 ? BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)) : null,
                           child: Container(
                             alignment: Alignment.center,
                             width: double.infinity,

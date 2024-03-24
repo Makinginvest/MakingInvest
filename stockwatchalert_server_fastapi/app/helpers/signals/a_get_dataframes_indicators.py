@@ -4,7 +4,7 @@ import pandas as pd
 import time
 from functools import wraps
 from app.helpers._functions.get_symbols_local_v1 import get_symbols_by_value_v1
-from app.helpers._functions_mongodb.a_mongodb_data_v1 import get_mongodb_data_historical_v1
+from app.helpers._mongodb.a_mongodb_data import get_mongodb_data_historical
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -13,18 +13,18 @@ from dateutil.relativedelta import relativedelta
 async def get_symbols_local_by_market_v1(market: str = "crypto"):
     path = ""
     if market == "crypto":
-        path = "_project/datasets/data/_data_symbols_crypto_usdt_busd_futures.csv"
+        path = "_project/data/symbols/_data_symbols_crypto_usdt_busd_futures.csv"
     if market == "stocks":
-        path = "_project/datasets/data/_data_symbols_stock_options_sp500.csv"
+        path = "_project/data/symbols/_data_symbols_stock_us_market.csv"
     if market == "forex":
-        path = "_project/datasets/data/_data_symbols_forex_oanda_main.csv"
+        path = "_project/data/symbols/_data_symbols_forex_oanda_main.csv"
 
     data = await get_symbols_by_value_v1(path)
     return data
 
 
 async def get_symbol_data_mongodb_by_market_v1(symbol, timeframe, data_length, dt_start, dt_end, hist_coll_name="historicalCrypto"):
-    _df = await get_mongodb_data_historical_v1(symbol, hist_coll_name=hist_coll_name, timeframe=timeframe, limit=data_length, dt_start=dt_start, dt_end=dt_end)
+    _df = await get_mongodb_data_historical(symbol, hist_coll_name=hist_coll_name, timeframe=timeframe, limit=data_length, dt_start=dt_start, dt_end=dt_end)
     return _df
 
 

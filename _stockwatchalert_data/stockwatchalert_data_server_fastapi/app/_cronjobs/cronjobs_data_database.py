@@ -3,9 +3,9 @@ from asyncio import tasks
 import os
 import aiocron
 from dotenv import load_dotenv
-from app.helpers._functions_mongodb.crypto__mongodb_update import crypto_update_all_mongodb_historical_recent
-from app.helpers._functions_mongodb.forex__mongodb_update import forex_update_all_mongodb_historical_recent
-from app.helpers._functions_mongodb.stocks__mongodb_update import stocks_update_all_mongodb_historical_recent
+from app.helpers._functions_mongodb.crypto_mongodb_update import crypto_update_all_mongodb_historical_recent
+from app.helpers._functions_mongodb.forex_mongodb_update import forex_update_all_mongodb_historical_recent
+from app.helpers._functions_mongodb.stocks_mongodb_update import stocks_update_all_mongodb_historical_recent
 from app.helpers.data.symbols_crypto import update_all_symbols_mongodb_aggr
 
 load_dotenv()
@@ -63,10 +63,16 @@ async def cron_forex_update_all_mongodb_historical_recent():
 async def cron_stocks_update_all_mongodb_historical_recent():
     if is_production == "True" and is_allow_cron == "True" and is_data_mode == "True":
         await asyncio.sleep(5)
+        tasks = [stocks_update_all_mongodb_historical_recent(timeframe="15m")]
+        await asyncio.gather(*tasks)
+
+
+@aiocron.crontab("0 0 * * *")
+async def cron_stocks_update_all_mongodb_historical_recent():
+    if is_production == "True" and is_allow_cron == "True" and is_data_mode == "True":
+        await asyncio.sleep(5)
         tasks = [
-            # stocks_update_all_mongodb_historical_recent(interval="5min", timeframe="5m"),
-            stocks_update_all_mongodb_historical_recent(interval="15min", timeframe="15m"),
-            stocks_update_all_mongodb_historical_recent(interval="1d", timeframe="1d"),
+            stocks_update_all_mongodb_historical_recent(timeframe="1d"),
         ]
         await asyncio.gather(*tasks)
 

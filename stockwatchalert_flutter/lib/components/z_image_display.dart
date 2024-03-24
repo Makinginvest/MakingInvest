@@ -16,60 +16,76 @@ class ZImageDisplay extends StatelessWidget {
   final double? height;
   final double? width;
   final BorderRadius? borderRadius;
-  final EdgeInsets? margin;
+  final EdgeInsets margin;
 
   @override
   Widget build(BuildContext context) {
-    bool isLight = Theme.of(context).brightness == Brightness.light;
-    Color baseColor = isLight ? Colors.grey.shade200 : Colors.grey.shade800;
-    Color highlightColor = isLight ? Colors.grey.shade300 : Colors.grey.shade700;
-    Color containerColor = isLight ? Colors.grey.shade100 : Colors.grey.shade600;
+    // Determine the theme brightness
+    final isLight = Theme.of(context).brightness == Brightness.light;
+
+    // Define color schemes based on the theme
+    final baseColor = isLight ? Colors.grey.shade200 : Colors.grey.shade800;
+    final highlightColor = isLight ? Colors.grey.shade300 : Colors.grey.shade700;
+    final containerColor = isLight ? Colors.grey.shade100 : Colors.grey.shade600;
+
     return Container(
+      decoration: BoxDecoration(color: containerColor, borderRadius: borderRadius),
       margin: margin,
-      child: Container(
-        alignment: Alignment.center,
-        height: height ?? 85,
-        width: width ?? 85,
-        child: image != ''
-            ? CachedNetworkImage(
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-                fadeInCurve: Curves.easeIn,
-                fadeInDuration: Duration(milliseconds: 600),
-                imageUrl: image,
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: baseColor,
-                  highlightColor: highlightColor,
-                  child: Container(decoration: BoxDecoration(color: containerColor, borderRadius: borderRadius)),
-                ),
-                errorWidget: (context, url, error) => Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(color: Colors.black12),
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: double.infinity,
-                      width: double.infinity,
-                      color: Colors.grey[200],
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Icon(AntDesign.picture, size: 45, color: Colors.black26), SizedBox(height: 2)],
-                      ),
-                    )),
-              )
-            : Container(
-                alignment: Alignment.center,
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.grey[300],
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(AntDesign.picture, size: 45, color: Colors.black26),
-                    SizedBox(height: 2),
-                  ],
-                ),
-              ),
+      child: ClipRRect(
+        borderRadius: borderRadius ?? BorderRadius.zero,
+        child: _buildImageContent(baseColor, highlightColor),
+      ),
+    );
+  }
+
+  Widget _buildImageContent(Color baseColor, Color highlightColor) {
+    if (image.isEmpty) return _buildPlaceholder();
+
+    return CachedNetworkImage(
+      imageUrl: image,
+      fit: BoxFit.cover,
+      width: width ?? double.infinity,
+      height: height ?? double.infinity,
+      fadeInCurve: Curves.easeIn,
+      fadeInDuration: const Duration(milliseconds: 600),
+      errorListener: (value) {},
+      placeholder: (_, __) => Shimmer.fromColors(
+        baseColor: baseColor,
+        highlightColor: highlightColor,
+        child: Container(color: Colors.white),
+      ),
+      errorWidget: (_, __, ___) => _buildErrorWidget(),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.grey[300],
+      width: width ?? double.infinity,
+      height: height ?? double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(AntDesign.picture, size: 20, color: Colors.black26),
+          SizedBox(height: 2),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    return Container(
+      width: width ?? double.infinity,
+      height: height ?? double.infinity,
+      alignment: Alignment.center,
+      color: Colors.grey[300],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(AntDesign.picture, size: 20, color: Colors.black26),
+          SizedBox(height: 2),
+        ],
       ),
     );
   }

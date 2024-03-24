@@ -2,7 +2,7 @@ echo 'Deploying Server Main'
 
 rsync -avrmR \
     --delete-excluded \
-    --exclude='_project/data/*' \
+        --exclude='_project/data/backtest/*' \
     --exclude='__venv/*' \
     --exclude='__pycache__/*' \
     --include='.env' \

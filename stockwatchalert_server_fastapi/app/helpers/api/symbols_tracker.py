@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import pandas as pd
 from app.helpers._functions.get_symbols_local_v1 import get_symbols_by_value_v1
 
-from app.helpers._functions_mongodb.a_mongodb_data_v1 import get_mongodb_data_historical_v1
+from app.helpers._mongodb.a_mongodb_data import get_mongodb_data_historical
 from app._database.db_connect_data import database_mongodb_data
 
 
@@ -28,7 +28,7 @@ async def get_symbol_tracker_all():
 async def get_symbols_trackers_stocks():
     try:
         # get symbols
-        symbols = await get_symbols_by_value_v1("_project/datasets/data/_data_symbols_stock_options_sp500.csv")
+        symbols = await get_symbols_by_value_v1("_project/data/symbols/_data_symbols_stock_options_sp500.csv")
         symbols = symbols[:200]
 
         df = pd.DataFrame()
@@ -62,7 +62,7 @@ async def get_symbols_trackers_stocks():
 async def get_symbols_trackers_forex():
     try:
         # get symbols
-        symbols = await get_symbols_by_value_v1("_project/datasets/data/_data_symbols_forex_oanda_main.csv")
+        symbols = await get_symbols_by_value_v1("_project/data/symbols/_data_symbols_forex_oanda_main.csv")
         symbols = symbols[:200]
         # symbols = ["EURUSD"]
 
@@ -98,7 +98,7 @@ async def get_symbols_trackers_forex():
 async def get_symbols_trackers_crypto():
     try:
         # get symbols
-        symbols = await get_symbols_by_value_v1("_project/datasets/data/_data_symbols_crypto_usdt_busd.csv")
+        symbols = await get_symbols_by_value_v1("_project/data/symbols/_data_symbols_crypto_usdt_busd.csv")
         df = pd.DataFrame()
 
         # run in chunk of 8
@@ -130,7 +130,7 @@ async def get_symbol_tracker(symbol: str, collection: str, market: str = "crypto
     try:
         # get symbol tracker
         start_date = datetime.datetime.now() - datetime.timedelta(days=10)
-        df = await get_mongodb_data_historical_v1(symbol, hist_coll_name=collection, timeframe="1h", dt_start=start_date)
+        df = await get_mongodb_data_historical(symbol, hist_coll_name=collection, timeframe="1h", dt_start=start_date)
         # print(df, symbol, collection)
 
         if df is None:

@@ -4,7 +4,7 @@ from _project.log_config.app_logger import app_logger
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from app._firebase.a_validate_api_key import validate_apikey
-from app.helpers.data.symbols_crypto import (
+from app.helpers.api.symbols_crypto import (
     generate_binance_future_usdt_busd_csv,
     generate_binance_usdt_busd_csv,
     get_binance_data_daily_futures_symbol_value,

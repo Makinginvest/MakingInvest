@@ -5,7 +5,7 @@ from fastapi.exceptions import HTTPException
 from fastapi import APIRouter
 from app._security.a_validate_api_key import validate_apikey
 
-from app.helpers._functions_mongodb.forex__mongodb_update import forex_update_all_mongodb_historical_all, forex_update_all_mongodb_historical_recent
+from app.helpers._functions_mongodb.forex_mongodb_update import forex_update_all_mongodb_historical_all, forex_update_all_mongodb_historical_recent
 
 
 router = APIRouter(prefix="/v1")

@@ -6,7 +6,7 @@ from app._database.db_connect_client import database_mongodb_client
 
 from dotenv import load_dotenv
 
-from app.helpers._functions.dev_print_v1 import dev_print
+from app.helpers._functions.dev_print import dev_print
 
 load_dotenv()
 is_production = os.getenv("PRODUCTION", "False")

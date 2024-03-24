@@ -202,6 +202,8 @@ class AppControlsProvider with ChangeNotifier {
     bool isAdmin = _authUser?.isAdmin ?? false;
     if (!isAdmin) signalAggrs.removeWhere((e) => e.nameIsAdminOnly == true);
     _signalAggrsOpenV1 = signalAggrs;
+    // sort by nameSort
+    _signalAggrsOpenV1.sort((a, b) => a.nameSort.compareTo(b.nameSort));
 
     print('handleSignalsXAggrOpenV1 ${_signalAggrsOpenV1.length}');
     notifyListeners();

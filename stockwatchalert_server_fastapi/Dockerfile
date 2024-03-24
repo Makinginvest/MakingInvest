@@ -10,8 +10,9 @@ RUN /usr/local/bin/python -m pip install --upgrade pip
 
 COPY .env ./
 COPY ./app ./app
-COPY ./_project/datasets ./_project/datasets
-COPY ./_project/data_results ./_project/data_results
+COPY ./_project/data/fmp ./_project/data/fmp
+COPY ./_project/data/results ./_project/data/results
+COPY ./_project/data/symbols ./_project/data/symbols
 COPY ./_project/log_config ./_project/log_config
 COPY ./_project/signals ./_project/signals
 

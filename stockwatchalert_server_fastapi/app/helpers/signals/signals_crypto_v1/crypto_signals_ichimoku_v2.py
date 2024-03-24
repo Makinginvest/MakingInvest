@@ -9,14 +9,14 @@ from dotenv import load_dotenv
 
 from app.helpers._functions.get_validate_generate_signals_v1 import get_validate_generate_signals_v1
 from app.helpers._functions.notifications_periods_v1 import handle_all_notifications_v1
-from app.helpers._functions_indicators.kaufman_efficiency_ratio import kaufman_efficiency_ratio
-from app.helpers._functions_mongodb.a_mongodb_client_v1 import (
+from app.helpers._indicators.kaufman_efficiency_ratio import kaufman_efficiency_ratio
+from app.helpers._mongodb.a_mongodb_client import (
     get_closed_signals_results_v1,
     get_active_signals_from_mongodb_v1,
     update_signals_aggr_open_v1,
     update_signals_by_symbol_v1,
 )
-from app.helpers.data.get_symbols_data import get_symbols_data_v1, get_symbols_data_details
+from app.helpers.api.symbols_data import get_symbols_data_v1, get_symbols_data_details
 from app.helpers.signals.a_get_dataframes_indicators import get_market_rank, get_symbols_local_by_market_v1
 from app.helpers.signals.a_get_signals_helpers import calculate_results
 
@@ -39,10 +39,11 @@ async def get_crypto_signals_ichimoku_v2():
     nameIsAdminOnly = False
     nameMarket = "crypto"
     nameNotificationTitle = "Crypto - Prime"
-    nameSort = 2
+    nameSort = 3
     nameType = "Crypto"
     nameTypeSubtitle = "Prime"
     nameVersion = "1.0.0"
+    nameInfo = "Stocks prices under $10 with high movement potential"
     leverage = 1
     start_up_candles = 60
     max_open_trades = 25
@@ -118,8 +119,8 @@ async def get_crypto_signals_ichimoku_v2():
     )
 
     trading_results = calculate_results(
-        df_signals=df_signals,
-        df_candles=df_details,
+        df_candles_entries=df_signals,
+        df_candles_targets=df_details,
         max_open_trades=max_open_trades,
         starting_bal=starting_bal,
         slPct=slPct,
@@ -162,6 +163,7 @@ async def get_crypto_signals_ichimoku_v2():
         nameSort=nameSort,
         nameVersion=nameVersion,
         nameType=nameType,
+        nameInfo=nameInfo,
         nameTypeSubtitle=nameTypeSubtitle,
         nameMarket=nameMarket,
         nameCollection=nameCollection,
@@ -191,6 +193,7 @@ async def get_crypto_signals_ichimoku_v2():
         "nameIsAdminOnly": nameIsAdminOnly,
         "nameSort": nameSort,
         "nameVersion": nameVersion,
+        "nameInfo": nameInfo,
         "nameType": nameType,
         "nameTypeSubtitle": nameTypeSubtitle,
         "nameNotificationTitle": nameNotificationTitle,

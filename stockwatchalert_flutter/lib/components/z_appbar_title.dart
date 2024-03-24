@@ -11,7 +11,7 @@ class AppBarTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('StockWatchAlert', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.green, height: 0)),
+        Text('StockWatchAlert', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.green, height: 0)),
         Text('Premium market insights', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, height: 0)),
       ],
     );

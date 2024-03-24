@@ -54,7 +54,7 @@ dependencies:
   smooth_star_rating_null_safety: ^1.0.4+2
   blurrycontainer: ^1.0.2
   toggle_switch: ^2.0.1
-  cached_network_image: ^3.2.2
+  cached_network_image: ^3.3.1
   flutter_image_compress: ^2.0.3
   change_case: ^1.0.2
   timeago_flutter: ^3.4.0
@@ -70,6 +70,7 @@ dependencies:
   flutter_sticky_header: ^0.6.5
   flutter_html: ^3.0.0-beta.2
   custom_pop_up_menu: ^1.2.4
+  custom_navigation_bar: ^0.8.2
 
 
 dev_dependencies:

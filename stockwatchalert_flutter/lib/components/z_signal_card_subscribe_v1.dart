@@ -82,6 +82,7 @@ class _ZSignalCardSubscribeV1State extends State<ZSignalCardSubscribeV1> {
     );
   }
 
+  // ignore: unused_element
   _buildStatusContainer({required String text, required bool isProfit, bool isInProgress = false}) {
     if (isInProgress)
       return Container(

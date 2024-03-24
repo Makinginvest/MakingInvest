@@ -3,7 +3,7 @@ echo 'Deploying Server websocket'
 rsync -avrmR \
     --delete-excluded \
     --exclude='__venv/*' \
-    --exclude='_project/data/*' \
+    --exclude='_project/data/backtest/*' \
     --exclude='__pycache__/*' \
     --include='.env' \
     --exclude='.\*' \
